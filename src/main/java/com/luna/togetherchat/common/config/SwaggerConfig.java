@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("tuanchat")
-                .packagesToScan("com.jxc.tuanchat")
+                .packagesToScan("com.luna.togetherchat")
                 .build();
     }
 

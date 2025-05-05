@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.exception;
 
-import com.jxc.tuanchat.common.enums.ErrorEnum;
+import com.luna.togetherchat.common.enums.ErrorEnum;
 import lombok.Data;
 
 @Data

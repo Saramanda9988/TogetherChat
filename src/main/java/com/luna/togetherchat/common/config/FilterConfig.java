@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.config;
 
-import com.jxc.tuanchat.common.interceptor.CorsFilter;
+import com.luna.togetherchat.common.interceptor.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

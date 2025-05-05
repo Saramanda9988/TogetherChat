@@ -1,8 +1,8 @@
 package com.luna.togetherchat.common.interceptor;
 
 import cn.hutool.extra.servlet.JakartaServletUtil;
-import com.jxc.tuanchat.common.domain.dto.RequestInfo;
-import com.jxc.tuanchat.common.utils.RequestHolder;
+import com.luna.togetherchat.common.domain.dto.RequestInfo;
+import com.luna.togetherchat.common.utils.RequestHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

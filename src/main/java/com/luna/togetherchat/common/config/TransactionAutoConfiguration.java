@@ -1,7 +1,7 @@
 package com.luna.togetherchat.common.config;
 
 
-import com.jxc.tuanchat.chat.event.MQProducer;
+import com.luna.togetherchat.chat.event.MQProducer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;

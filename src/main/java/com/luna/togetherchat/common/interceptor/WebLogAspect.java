@@ -2,8 +2,8 @@ package com.luna.togetherchat.common.interceptor;
 
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.json.JSONUtil;
-import com.jxc.tuanchat.common.domain.dto.RequestInfo;
-import com.jxc.tuanchat.common.utils.RequestHolder;
+import com.luna.togetherchat.common.domain.dto.RequestInfo;
+import com.luna.togetherchat.common.utils.RequestHolder;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;

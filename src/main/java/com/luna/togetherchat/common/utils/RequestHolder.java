@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.utils;
 
-import com.jxc.tuanchat.common.domain.dto.RequestInfo;
+import com.luna.togetherchat.common.domain.dto.RequestInfo;
 
 /**
  * Description: 请求上下文

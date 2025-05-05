@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jxc.tuanchat.common.domain.vo.request.CursorPageBaseRequest;
-import com.jxc.tuanchat.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.togetherchat.common.domain.vo.request.CursorPageBaseRequest;
+import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
 import org.springframework.data.redis.core.ZSetOperations;
 
 import java.util.Date;

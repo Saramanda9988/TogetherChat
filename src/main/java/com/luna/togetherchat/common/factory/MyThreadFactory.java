@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.factory;
 
-import com.jxc.tuanchat.common.handler.GlobalUncaughtExceptionHandler;
+import com.luna.togetherchat.common.handler.GlobalUncaughtExceptionHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

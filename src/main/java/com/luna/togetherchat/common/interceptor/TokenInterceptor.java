@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.interceptor;
 
-import com.jxc.tuanchat.common.annotation.PublicAPI;
+import com.luna.togetherchat.common.annotation.PublicAPI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.config;
 
-import com.jxc.tuanchat.common.factory.MyThreadFactory;
+import com.luna.togetherchat.common.factory.MyThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

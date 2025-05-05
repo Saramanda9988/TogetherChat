@@ -1,6 +1,6 @@
 package com.luna.togetherchat.common.domain.vo.response;
 
-import com.jxc.tuanchat.common.enums.ErrorEnum;
+import com.luna.togetherchat.common.enums.ErrorEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.luna.togetherchat.common.handler;
 
 
-import com.jxc.tuanchat.common.domain.vo.response.ApiResult;
-import com.jxc.tuanchat.common.enums.CommonErrorEnum;
-import com.jxc.tuanchat.common.exception.BusinessException;
+import com.luna.togetherchat.common.domain.vo.response.ApiResult;
+import com.luna.togetherchat.common.enums.CommonErrorEnum;
+import com.luna.togetherchat.common.exception.BusinessException;
 import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.luna.togetherchat.common.cache.doubleCache;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.jxc.tuanchat.common.cache.ELParser;
+import com.luna.togetherchat.common.cache.ELParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -30,7 +30,7 @@ public class CacheAspect {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @Pointcut("@annotation(com.jxc.tuanchat.common.cache.doubleCache.DoubleCache)")
+    @Pointcut("@annotation(com.luna.togetherchat.common.cache.doubleCache.DoubleCache)")
     public void cacheAspect() {
     }
 

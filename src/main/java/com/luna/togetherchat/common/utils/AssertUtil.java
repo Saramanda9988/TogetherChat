@@ -1,10 +1,10 @@
 package com.luna.togetherchat.common.utils;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.jxc.tuanchat.common.enums.BusinessErrorEnum;
-import com.jxc.tuanchat.common.enums.CommonErrorEnum;
-import com.jxc.tuanchat.common.enums.ErrorEnum;
-import com.jxc.tuanchat.common.exception.BusinessException;
+import com.luna.togetherchat.common.enums.BusinessErrorEnum;
+import com.luna.togetherchat.common.enums.CommonErrorEnum;
+import com.luna.togetherchat.common.enums.ErrorEnum;
+import com.luna.togetherchat.common.exception.BusinessException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
