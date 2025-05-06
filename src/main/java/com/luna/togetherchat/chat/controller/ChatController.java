@@ -1,24 +1,15 @@
 package com.luna.togetherchat.chat.controller;
 
-import com.luna.togetherchat.chat.domain.entity.Message;
-import com.luna.togetherchat.chat.domain.request.message.ChatMessagePageRequest;
+import com.luna.togetherchat.chat.domain.request.message.ChatMessageDeleteRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
-import com.luna.togetherchat.chat.domain.request.message.InsertMessageRequest;
-import com.luna.togetherchat.chat.domain.request.message.MoveMessageRequest;
-import com.luna.togetherchat.chat.domain.response.ChatMessageResponse;
+import com.luna.togetherchat.chat.domain.request.message.ChatMessageUpdateRequest;
 import com.luna.togetherchat.chat.service.ChatService;
 import com.luna.togetherchat.common.domain.vo.response.ApiResult;
-import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.togetherchat.common.enums.BusinessErrorEnum;
 import com.luna.togetherchat.common.utils.RequestHolder;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 消息处理相关的页表
@@ -30,4 +21,25 @@ import java.util.List;
 @RequestMapping("/capi/chat")
 public class ChatController {
     private final ChatService chatService;
+
+    @PostMapping("/message")
+    public ApiResult<Void> sendMessage(@RequestBody ChatMessageRequest request) {
+        Long userId = RequestHolder.get().getUserId();
+        chatService.sendMessage(request, userId);
+        return ApiResult.success();
+    }
+
+    @PutMapping("/message")
+    public ApiResult<Void> updateMessage(@RequestBody ChatMessageUpdateRequest request) {
+        Long userId = RequestHolder.get().getUserId();
+        chatService.updateMessage(request, userId);
+        return ApiResult.success();
+    }
+
+    @DeleteMapping("/message")
+    public ApiResult<Void> deleteMessage(@RequestBody ChatMessageDeleteRequest request) {
+        Long userId = RequestHolder.get().getUserId();
+        chatService.deleteMessage(request, userId);
+        return ApiResult.success();
+    }
 }

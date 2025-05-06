@@ -47,8 +47,8 @@ public class Message implements Serializable {
 
     @NotNull
     @Schema(description = "消息的房间号")
-    @TableField("room_id")
-    private Long roomId;
+    @TableField("group_id")
+    private Long groupId;
 
     @NotNull
     @Schema(description = "用户id")
@@ -56,23 +56,9 @@ public class Message implements Serializable {
     private Long userId;
 
     @NotNull
-    @Schema(description = "角色id")
-    @TableField("role_id")
-    private Long roleId;
-
-    @NotNull
     @Schema(description = "内容")
     @TableField("content")
     private String content;
-
-    @NotNull
-    @Schema(description = "说话人的这个时候的立绘")
-    @TableField("avatar_id")
-    private Long avatarId;
-
-    @Schema(description = "BA那种，比如说人旁边飘过去一个问号这样子")
-    @TableField("animation")
-    private Integer animation;
 
     @Schema(description = "比如说，立绘的抖动，这种")
     @TableField("special_effects")
@@ -92,11 +78,6 @@ public class Message implements Serializable {
     @TableField("message_type")
     private Integer messageType;
 
-    @NotNull
-    @Schema(description = "位置")
-    @TableField("position")
-    private Double position;
-
     @Schema(description = "不同类型消息持有的额外信息")
     @TableField(value = "extra", typeHandler = JacksonTypeHandler.class)
     private MessageExtra extra;
@@ -110,10 +91,8 @@ public class Message implements Serializable {
     private LocalDateTime updateTime;
 
     public Message(ChatMessageRequest request, Long userId) {
-        this.roomId = request.getRoomId();
+        this.groupId = request.getGroupId();
         this.messageType = request.getMessageType();
-        this.roleId = request.getRoleId();
-        this.avatarId = request.getAvatarId();
         this.content = request.getContent();
         this.replyMessageId = request.getReplayMessageId();
         this.userId = userId;

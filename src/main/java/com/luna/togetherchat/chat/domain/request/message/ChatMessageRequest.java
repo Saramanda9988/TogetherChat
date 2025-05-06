@@ -21,19 +21,11 @@ public class ChatMessageRequest {
 
     @NotNull
     @Schema(description = "房间id")
-    private Long roomId;
+    private Long groupId;
 
     @NotNull
     @Schema(description = "消息类型")
     private Integer messageType;
-
-    @NotNull
-    @Schema(description = "发送者扮演的角色的id")
-    private Long roleId;
-
-    @NotNull
-    @Schema(description = "发送者扮演的角色的立绘id")
-    private Long avatarId;
 
     @NotBlank(message = "内容不能为空")
     @Size(max = 1024, message = "消息内容过长。")

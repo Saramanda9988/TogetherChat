@@ -20,5 +20,5 @@ import lombok.NoArgsConstructor;
 public class ChatMessagePageRequest extends CursorPageBaseRequest {
     @NotNull
     @Schema(description = "会话id")
-    private Long roomId;
+    private Long groupId;
 }

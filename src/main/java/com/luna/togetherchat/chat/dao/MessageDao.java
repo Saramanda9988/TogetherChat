@@ -17,5 +17,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class MessageDao extends ServiceImpl<MessageMapper, Message> {
+    // SELECT group_id, MAX(sync_id) as sync_id FROM message GROUP BY group_id
+    public Map<Long, Long> getLastIdMap() {
+        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("group_id", "MAX(sync_id) as sync_id").groupBy("group_id");
+        List<Message> list = this.list(queryWrapper);
+        return list.stream().collect(Collectors.toMap(Message::getGroupId, Message::getSyncId));
+    }
 
+    public Long getLargestMessageId() {
+        return lambdaQuery()
+                .orderByDesc(Message::getMessageID)
+                .last("limit 1")
+                .one()
+                .getMessageID();
+    }
 }
