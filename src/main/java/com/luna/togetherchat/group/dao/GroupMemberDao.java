@@ -3,6 +3,7 @@ package com.luna.togetherchat.group.dao;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luna.togetherchat.group.domain.entity.GroupMember;
 import com.luna.togetherchat.group.mapper.GroupMemberMapper;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,5 +24,12 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
                 .stream()
                 .map(GroupMember::getUserId)
                 .toList();
+    }
+
+    public GroupMember getMemberByGroupIdAndUserId(@NotNull Long groupId, Long userId) {
+        return lambdaQuery()
+                .eq(GroupMember::getGroupId, groupId)
+                .eq(GroupMember::getUserId, userId)
+                .one();
     }
 }

@@ -1,10 +1,13 @@
 package com.luna.togetherchat.chat.controller;
 
+import com.luna.togetherchat.chat.domain.entity.Message;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageDeleteRequest;
+import com.luna.togetherchat.chat.domain.request.message.ChatMessagePageRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageUpdateRequest;
 import com.luna.togetherchat.chat.service.ChatService;
 import com.luna.togetherchat.common.domain.vo.response.ApiResult;
+import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.togetherchat.common.utils.RequestHolder;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +44,17 @@ public class ChatController {
         Long userId = RequestHolder.get().getUserId();
         chatService.deleteMessage(request, userId);
         return ApiResult.success();
+    }
+
+    @GetMapping("/message/page")
+    public ApiResult<CursorPageBaseResponse<Message>> getMessageList(@RequestBody ChatMessagePageRequest request) {
+        Long userId = RequestHolder.get().getUserId();
+        return ApiResult.success(chatService.getMessageList(request, userId));
+    }
+
+    @GetMapping("/message")
+    public ApiResult<Message> getMessageDetail(@RequestParam Long messageId) {
+        Long userId = RequestHolder.get().getUserId();
+        return ApiResult.success(chatService.getMessageDetail(messageId, userId));
     }
 }

@@ -1,5 +1,6 @@
 package com.luna.togetherchat.chat.service;
 
+import com.luna.togetherchat.chat.domain.entity.Message;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageDeleteRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessagePageRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
@@ -15,7 +16,7 @@ public interface ChatService {
 
     void deleteMessage(ChatMessageDeleteRequest request, Long userId);
 
-    ChatMessageResponse getMessageDetail(Long id, Long userId);
+    Message getMessageDetail(Long id, Long userId);
 
-    CursorPageBaseResponse<ChatMessageResponse> getMessageList(ChatMessagePageRequest request, Long userId);
+    CursorPageBaseResponse<Message> getMessageList(ChatMessagePageRequest request, Long userId);
 }

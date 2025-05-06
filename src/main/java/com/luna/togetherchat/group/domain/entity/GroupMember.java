@@ -45,7 +45,7 @@ public class GroupMember implements Serializable {
 
     @Schema(description = "成员角色")
     @TableField("role")
-    private String role;
+    private Integer role;
 
     @Schema(description = "加入时间")
     @TableField("joined_at")
