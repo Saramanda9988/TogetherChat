@@ -25,16 +25,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("chat_group_member")
+@TableName("group_member")
 @Schema(name = "GroupMember", description = "")
 public class GroupMember implements Serializable {
 
-    // TODO:修改表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "成员关系ID")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "member_id", type = IdType.AUTO)
+    private Long memberId;
 
     @Schema(description = "群组ID")
     @TableField("group_id")
@@ -44,6 +43,10 @@ public class GroupMember implements Serializable {
     @TableField("user_id")
     private Long userId;
 
+    @Schema(description = "群昵称")
+    @TableField("nickname")
+    private String nickname;
+
     @Schema(description = "成员角色")
     @TableField("role")
     private Integer role;
@@ -51,5 +54,5 @@ public class GroupMember implements Serializable {
     @Schema(description = "加入时间")
     @TableField(value = "join_time", fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime join_time;
+    private LocalDateTime joinTime;
 }

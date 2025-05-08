@@ -1,6 +1,6 @@
 package com.luna.togetherchat.user.mapper;
 
-import com.luna.togetherchat.user.domain.entity.Info;
+import com.luna.togetherchat.user.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author LunaRain_079
  * @since 2025-05-05
  */
-public interface InfoMapper extends BaseMapper<Info> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

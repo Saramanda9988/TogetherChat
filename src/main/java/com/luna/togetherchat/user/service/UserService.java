@@ -1,6 +1,6 @@
 package com.luna.togetherchat.user.service;
 
-import com.luna.togetherchat.user.domain.entity.Info;
+import com.luna.togetherchat.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author LunaRain_079
  * @since 2025-05-05
  */
-public interface IInfoService extends IService<Info> {
+public interface UserService {
 
 }

@@ -25,9 +25,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_info")
-@Schema(name = "Info", description = "")
-public class Info implements Serializable {
+@TableName("user")
+@Schema(name = "User", description = "")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

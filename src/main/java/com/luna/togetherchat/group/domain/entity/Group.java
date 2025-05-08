@@ -25,16 +25,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("chat_group")
+@TableName("group")
 @Schema(name = "Group", description = "群组实体类")
 public class Group implements Serializable {
 
-    // TODO:修改表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "群组ID")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "group_id", type = IdType.AUTO)
+    private Long groupId;
 
     @Schema(description = "群组名称")
     @TableField("name")

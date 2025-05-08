@@ -84,9 +84,9 @@ public class GroupServiceImpl implements GroupService {
                 List<GroupMember> members = new ArrayList<>();
                 memberIds.forEach(memberId -> {
                     GroupMember member = GroupMember.builder()
-                            .groupId(group.getId())
+                            .groupId(group.getGroupId())
                             .userId(memberId)
-                            .join_time(LocalDateTime.now())
+                            .joinTime(LocalDateTime.now())
                             .build();
                     if (Objects.equals(memberId, userId)) {
                         member.setRole(MemberTypeEnum.OWNER.getType());
@@ -107,10 +107,10 @@ public class GroupServiceImpl implements GroupService {
             List<GroupMember> members = new ArrayList<>();
             memberIds.forEach(memberId -> {
                 GroupMember member = GroupMember.builder()
-                        .groupId(group.getId())
+                        .groupId(group.getGroupId())
                         .userId(memberId)
                         .role(MemberTypeEnum.ONE.getType())
-                        .join_time(LocalDateTime.now())
+                        .joinTime(LocalDateTime.now())
                         .build();
                 members.add(member);
             });
@@ -224,7 +224,7 @@ public class GroupServiceImpl implements GroupService {
         // 返回群组信息
         GroupResponse response = GroupResponse
                 .builder()
-                .id(group.getId())
+                .id(group.getGroupId())
                 .name(group.getName())
                 .description(group.getDescription())
                 .avatar(group.getAvatar())
@@ -244,10 +244,10 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public CursorPageBaseResponse<GroupResponse> getUserGroups(GroupPageRequest request, Long userId) {
-        CursorPageBaseResponse<Group> cursorPage = groupMemberDao.getCursorPage(userId, request, Long.MAX_VALUE);
+        CursorPageBaseResponse<Group> cursorPage = groupDao.getCursorPage(userId, request, Long.MAX_VALUE);
 
         List<GroupResponse> list = cursorPage.getList().stream().map(group -> GroupResponse.builder()
-                .id(group.getId())
+                .id(group.getGroupId())
                 .name(group.getName())
                 .description(group.getDescription())
                 .avatar(group.getAvatar())

@@ -1,4 +1,4 @@
-package com.luna.togetherchat.group.controller;
+package com.luna.togetherchat.user.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2025-05-05
  */
 @RestController
-@RequestMapping("/groupPermission")
-public class GroupPermissionController {
+@RequestMapping("/info")
+public class UserController {
 
 }

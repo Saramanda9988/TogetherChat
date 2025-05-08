@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +49,10 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     /*==========================websocket连接==========================*/
     // 处理所有ws连接的事件
+
+    public List<Long> getOnlineUserId() {
+        return ONLINE_UID_MAP.keySet().stream().toList();
+    }
 
     @Override
     public void connect(Channel channel) {
