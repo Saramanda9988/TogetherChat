@@ -1,6 +1,5 @@
 package com.luna.togetherchat.websocket.domain.vo.request;
 
-import com.luna.togetherchat.user.enums.UserStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +29,6 @@ public class WSMemberChange {
     private List<Long> userIds;
     @Schema(description = "变动类型 1加入群组 2移除群组 3权限更新")
     private Integer changeType;
-    /**
-     * @see UserStatusEnum
-     */
     @Schema(description = "在线状态 1在线 2离线")
     private Integer activeStatus;
     @Schema(description = "最后一次上下线时间")

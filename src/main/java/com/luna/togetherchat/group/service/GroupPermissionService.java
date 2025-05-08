@@ -1,6 +1,6 @@
 package com.luna.togetherchat.group.service;
 
-import com.luna.togetherchat.group.domain.entity.GroupMember;
+import com.luna.togetherchat.group.domain.entity.GroupPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author LunaRain_079
  * @since 2025-05-05
  */
-public interface IGroupMemberService extends IService<GroupMember> {
+public interface GroupPermissionService {
 
 }

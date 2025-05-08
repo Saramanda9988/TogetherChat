@@ -2,7 +2,7 @@ package com.luna.togetherchat.group.service.impl;
 
 import com.luna.togetherchat.group.domain.entity.GroupPermission;
 import com.luna.togetherchat.group.mapper.GroupPermissionMapper;
-import com.luna.togetherchat.group.service.IGroupPermissionService;
+import com.luna.togetherchat.group.service.GroupPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2025-05-05
  */
 @Service
-public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMapper, GroupPermission> implements IGroupPermissionService {
+public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMapper, GroupPermission> implements GroupPermissionService {
 
 }

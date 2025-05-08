@@ -18,7 +18,8 @@ public enum MemberTypeEnum {
     OWNER(1, "群主"),
     ADMINISTRATOR(2, "管理员"),
     MEMBER(3, "群成员"),
-    BOT(4, "AI")
+    BOT(4, "AI"),
+    ONE(5, "单聊成员"),
     ;
 
     private final Integer type;

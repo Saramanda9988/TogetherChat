@@ -1,12 +1,12 @@
 package com.luna.togetherchat.group.domain.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "GroupMember", description = "")
 public class GroupMember implements Serializable {
 
+    // TODO:修改表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "成员关系ID")
@@ -48,6 +49,7 @@ public class GroupMember implements Serializable {
     private Integer role;
 
     @Schema(description = "加入时间")
-    @TableField("joined_at")
-    private LocalDateTime joinedAt;
+    @TableField(value = "join_time", fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime join_time;
 }

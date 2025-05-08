@@ -1,6 +1,6 @@
 package com.luna.togetherchat.websocket.domain.vo.request;
 
-import com.luna.togetherchat.group.domain.response.ChatMessageResponse;
+import com.luna.togetherchat.chat.domain.response.ChatMessageResponse;
 import lombok.Data;
 
 /**

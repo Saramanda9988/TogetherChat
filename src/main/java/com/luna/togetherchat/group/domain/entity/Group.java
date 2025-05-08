@@ -1,12 +1,12 @@
 package com.luna.togetherchat.group.domain.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,9 +26,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("chat_group")
-@Schema(name = "Group", description = "")
+@Schema(name = "Group", description = "群组实体类")
 public class Group implements Serializable {
 
+    // TODO:修改表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "群组ID")
@@ -51,11 +52,19 @@ public class Group implements Serializable {
     @TableField("avatar")
     private String avatar;
 
-    @Schema(description = "创建时间")
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @Schema(description = "群组类型")
+    @TableField("type")
+    private Integer type;
 
-    @Schema(description = "最后更新时间")
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
+    @Schema(description = "房间状态 0正常 1删除")
+    @TableField("status")
+    private Integer status;
+
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime createTime;
+
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime updateTime;
 }

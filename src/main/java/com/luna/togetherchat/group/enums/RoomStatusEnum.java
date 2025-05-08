@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 public enum RoomStatusEnum {
     ACTIVE(0, "正常"),
     DELETED(1, "删除"),
+    GROUP(3, "群组"),
+    CHAT(4, "单聊"),
+    CREATE(5, "创建"),
     ;
 
     private final Integer type;
