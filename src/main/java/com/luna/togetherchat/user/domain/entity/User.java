@@ -32,8 +32,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "用户ID")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
 
     @Schema(description = "登录用户名")
     @TableField("username")
@@ -57,7 +57,11 @@ public class User implements Serializable {
 
     @Schema(description = "账户状态")
     @TableField("status")
-    private String status;
+    private Integer status;
+
+    @Schema(description = "账户密码")
+    @TableField("password")
+    private String password;
 
     @Schema(description = "创建时间")
     @TableField("created_at")

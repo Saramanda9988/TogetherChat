@@ -234,6 +234,16 @@ public class RedisUtils {
     }
 
     /**
+     * 普通缓存获取并删除
+     *
+     * @param key 键
+     * @return 值
+     */
+    private static String getDel(String key) {
+        return key == null ? null : stringRedisTemplate.opsForValue().getAndDelete(key);
+    }
+
+    /**
      * 普通缓存放入
      *
      * @param key   键
@@ -256,6 +266,11 @@ public class RedisUtils {
 
     public static <T> T get(String key, Class<T> tClass) {
         String s = get(key);
+        return toBeanOrNull(s, tClass);
+    }
+
+    public static <T> T getDel(String key, Class<T> tClass) {
+        String s = getDel(key);
         return toBeanOrNull(s, tClass);
     }
 

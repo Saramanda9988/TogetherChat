@@ -2,7 +2,6 @@ package com.luna.togetherchat.group.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.togetherchat.common.enums.CommonErrorEnum;
 import com.luna.togetherchat.common.exception.BusinessException;
 import com.luna.togetherchat.group.dao.GroupDao;
 import com.luna.togetherchat.group.dao.GroupMemberDao;

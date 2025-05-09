@@ -45,17 +45,17 @@ public class GroupMemberController {
         return ApiResult.success();
     }
 
-    /**
-     * 2.查看用户详情（user信息）
-     */
-    @GetMapping("/{groupId}/member/{userId}")
-    @Operation(summary = "获取群组成员详情")
-    public ApiResult<GroupMemberResponse> getMemberDetail(
-            @PathVariable Long groupId,
-            @PathVariable Long userId) {
-        Long operatorId = RequestHolder.get().getUserId();
-        return ApiResult.success(groupMemberService.getMemberDetail(groupId, userId, operatorId));
-    }
+//    /**
+//     * 2.查看用户详情（user信息）
+//     */
+//    @GetMapping("/{groupId}/member/{userId}")
+//    @Operation(summary = "获取群组成员详情")
+//    public ApiResult<GroupMemberResponse> getMemberDetail(
+//            @PathVariable Long groupId,
+//            @PathVariable Long userId) {
+//        Long operatorId = RequestHolder.get().getUserId();
+//        return ApiResult.success(groupMemberService.getMemberDetail(groupId, userId, operatorId));
+//    }
 
     /**
      * 3.翻页查看所有群员
