@@ -33,7 +33,7 @@ public class JwtUtils {
     /**
      * token秘钥，请勿泄露，请勿随便修改
      */
-    @Value("${tuanchat.jwt.secret}")
+    @Value("${togetherchat.jwt.secret}")
     private static String secret;
     // token前缀
     public static final String BEARER = "Bearer ";

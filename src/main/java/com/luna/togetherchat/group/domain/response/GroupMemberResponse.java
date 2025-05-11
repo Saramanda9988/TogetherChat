@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 群组成员信息响应
+ * 群组成员列表信息响应
  */
 @Data
 @Builder
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class GroupMemberResponse {
     
     @Schema(description = "成员关系ID")
-    private Long id;
+    private Long memberId;
     
     @Schema(description = "群组ID")
     private Long groupId;
@@ -29,9 +29,6 @@ public class GroupMemberResponse {
     
     @Schema(description = "用户昵称")
     private String nickname;
-    
-    @Schema(description = "用户头像URL")
-    private String avatar;
     
     @Schema(description = "成员角色")
     private Integer role;

@@ -22,13 +22,13 @@ public class MQSink extends RichSinkFunction<String> {
     protected Connection connection;
     protected Channel channel;
 
-    @Value("${tuanchat.rabbitmq.port}")
+    @Value("${togetherchat.rabbitmq.port}")
     private Integer mqPort;
-    @Value("${tuanchat.rabbitmq.host}")
+    @Value("${togetherchat.rabbitmq.host}")
     private String mqHost;
-    @Value("${tuanchat.rabbitmq.username}")
+    @Value("${togetherchat.rabbitmq.username}")
     private String mqUsername;
-    @Value("${tuanchat.rabbitmq.password}")
+    @Value("${togetherchat.rabbitmq.password}")
     private String mqPassword;
 
     @Override

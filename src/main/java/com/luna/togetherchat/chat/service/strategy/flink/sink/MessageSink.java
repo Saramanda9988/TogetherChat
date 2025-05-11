@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageSink extends AbstractSink<Message> {
 
-    @Value("${tuanchat.message.table.name}")
+    @Value("${togetherchat.message.table.name}")
     private  String message;
 
     @Override

@@ -3,6 +3,7 @@ package com.luna.togetherchat.websocket;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
+import com.luna.togetherchat.call.domain.request.CallingRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.common.domain.vo.request.websocket.WSBaseReq;
 import com.luna.togetherchat.websocket.enums.WSReqTypeEnum;
@@ -106,6 +107,9 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
                 String data = wsBaseReq.getData();
                 webSocketService.sendMessage(JSONUtil.toBean(data, ChatMessageRequest.class), ctx.channel());
                 break;
+            case WEBRTC:
+                String content = wsBaseReq.getData();
+                webSocketService.handleCallSignaling(JSONUtil.toBean(content, CallingRequest.class), ctx.channel());
             default:
                 log.info("未知类型");
         }

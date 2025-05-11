@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> {
-    private final GroupDao groupDao;
     
     /**
      * 通过房间ID获取房间中所有成员用户ID
@@ -40,15 +39,6 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
                 .eq(GroupMember::getGroupId, groupId)
                 .eq(GroupMember::getUserId, userId)
                 .one();
-    }
-
-    public List<Long> getGroupByUserId(Long userId) {
-        return lambdaQuery()
-                .eq(GroupMember::getUserId, userId)
-                .list()
-                .stream()
-                .map(GroupMember::getGroupId)
-                .collect(Collectors.toList());
     }
 
     public List<Long> getGroupIdByUserId(Long userId) {

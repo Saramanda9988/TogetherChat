@@ -1,6 +1,7 @@
 package com.luna.togetherchat.websocket.service;
 
 
+import com.luna.togetherchat.call.domain.request.CallingRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
 import io.netty.channel.Channel;
@@ -41,4 +42,8 @@ public interface WebSocketService {
     void removed(Channel channel);
 
     void handleHeartBeat(Channel channel);
+
+    void sendWebrtcSignal(String content, Channel channel);
+
+    void handleCallSignaling(CallingRequest callingRequest, Channel channel);
 }

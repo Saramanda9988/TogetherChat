@@ -147,11 +147,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         // 构建响应
         return GroupMemberResponse
                 .builder()
-                .id(member.getMemberId())
                 .groupId(member.getGroupId())
                 .userId(member.getUserId())
                 .nickname(userInfo.getNickname())
-                .avatar(userInfo.getAvatar())
                 .role(member.getRole())
                 .build();
     }

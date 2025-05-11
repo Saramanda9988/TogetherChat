@@ -15,23 +15,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class MySQLListener implements ApplicationRunner {
 
-    @Value("${tuanchat.mysql.ip}")
+    @Value("${togetherchat.mysql.ip}")
     private  String mysqlIP;
-    @Value("${tuanchat.mysql.port}")
+    @Value("${togetherchat.mysql.port}")
     private  String mysqlPort;
-    @Value("${tuanchat.mysql.username}")
+    @Value("${togetherchat.mysql.username}")
     private  String mysqlUsername;
-    @Value("${tuanchat.mysql.password}")
+    @Value("${togetherchat.mysql.password}")
     private  String mysqlPassword;
-    @Value("${tuanchat.mysql.db}")
+    @Value("${togetherchat.mysql.db}")
     private  String mysqlDb;
-    @Value("${tuanchat.redis.host}")
+    @Value("${togetherchat.redis.host}")
     private  String redisHost;
-    @Value("${tuanchat.redis.port}")
+    @Value("${togetherchat.redis.port}")
     private  String redisPort;
-    @Value("${tuanchat.message.table.name}")
+    @Value("${togetherchat.message.table.name}")
     private  String message;
-    @Value("${tuanchat.room_member.table.name}")
+    @Value("${togetherchat.room_member.table.name}")
     private  String room_group_member;
 
 

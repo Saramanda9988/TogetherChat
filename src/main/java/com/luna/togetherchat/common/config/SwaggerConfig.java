@@ -16,7 +16,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("tuanchat")
+                .group("togetherchat")
                 .packagesToScan("com.luna.togetherchat")
                 .build();
     }
@@ -24,9 +24,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         Contact contact = new Contact();
-        contact.setUrl("https://space.bilibili.com/108753930");
-        contact.setName("降星驰");
-        contact.setEmail("starrybamboo@qq.com");
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes("Authorization",
@@ -34,10 +31,6 @@ public class SwaggerConfig {
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("Bearer")
                                         .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
-                .info(new Info().title("团剧共创")
-                        .contact(contact)
-                        .description("接口文档")
-                        .version("v1.0"));
+                .addSecurityItem(new SecurityRequirement().addList("Authorization"));
     }
 }
