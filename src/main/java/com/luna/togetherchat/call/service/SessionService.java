@@ -1,6 +1,6 @@
 package com.luna.togetherchat.call.service;
 
-import com.luna.togetherchat.call.domain.entity.Participant;
+import com.luna.togetherchat.call.domain.entity.Session;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author LunaRain_079
  * @since 2025-05-05
  */
-public interface IParticipantService extends IService<Participant> {
+public interface SessionService {
 
 }

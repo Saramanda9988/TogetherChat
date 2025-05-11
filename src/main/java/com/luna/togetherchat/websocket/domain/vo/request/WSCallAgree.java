@@ -15,16 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WSCallAgree {
-    @Schema(description = "发起通话的用户ID")
-    private Long callerId;
-    
-    @Schema(description = "同意通话的用户ID")
-    private Long receiverId;
-    
-    @Schema(description = "通话会话ID")
-    private Long sessionId;
-    
-    @Schema(description = "通话类型：1-语音通话，2-视频通话")
-    private Integer callType;
+public class WSCallAgree extends WSCallSignalingAction {
+
 }

@@ -15,16 +15,28 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WSCallRequest {
+public class WSCallSignalingAction {
     @Schema(description = "发起通话的用户ID")
     private Long callerId;
 
     @Schema(description = "接收通话的用户ID")
     private Long receiverId;
 
+    @Schema(description = "通话会话ID")
+    private Long sessionId;
+
+    @Schema(description = "信令类型")
+    private Integer type;
+
     @Schema(description = "通话类型：1-语音通话，2-视频通话")
     private Integer callType;
 
     @Schema(description = "通话请求的过期时间戳")
     private Long expireTime;
+
+    @Schema(description = "拒绝原因：1-用户拒绝，2-用户忙，3-其他原因")
+    private Integer rejectReason;
+
+    @Schema(description = "挂断原因：1-正常挂断，2-网络问题，3-其他原因")
+    private Integer cancelReason;
 }

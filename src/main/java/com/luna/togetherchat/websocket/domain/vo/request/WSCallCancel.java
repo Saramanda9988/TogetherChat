@@ -15,19 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WSCallCancel {
-    @Schema(description = "挂断通话的用户ID")
-    private Long userId;
-    
-    @Schema(description = "通话会话ID")
-    private Long sessionId;
-    
-    @Schema(description = "通话时长（秒）")
-    private Long duration;
-    
+public class WSCallCancel extends WSCallSignalingAction {
+
     @Schema(description = "挂断原因：1-正常挂断，2-网络问题，3-其他原因")
     private Integer cancelReason;
-    
-    @Schema(description = "通话类型：1-语音通话，2-视频通话")
-    private Integer callType;
 }

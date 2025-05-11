@@ -29,11 +29,12 @@ import lombok.NoArgsConstructor;
 @Schema(name = "Participant", description = "")
 public class Participant implements Serializable {
 
+    // TODO:记得修改数据库表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "参与记录ID")
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Long participantId;
 
     @Schema(description = "会话ID")
     @TableField("session_id")
@@ -44,10 +45,10 @@ public class Participant implements Serializable {
     private Long userId;
 
     @Schema(description = "加入时间")
-    @TableField("joined_at")
-    private LocalDateTime joinedAt;
+    @TableField("join_time")
+    private LocalDateTime joinTime;
 
-    @Schema(description = "是否在线")
-    @TableField("is_online")
-    private Boolean isOnline;
+    @Schema(description = "离开时间")
+    @TableField("leave_time")
+    private LocalDateTime leaveTime;
 }

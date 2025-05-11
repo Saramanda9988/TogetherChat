@@ -2,8 +2,8 @@ package com.luna.togetherchat.call.service.impl;
 
 import com.luna.togetherchat.call.domain.entity.Participant;
 import com.luna.togetherchat.call.mapper.ParticipantMapper;
-import com.luna.togetherchat.call.service.IParticipantService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luna.togetherchat.call.service.ParticipantService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2025-05-05
  */
 @Service
-public class ParticipantServiceImpl extends ServiceImpl<ParticipantMapper, Participant> implements IParticipantService {
+public class ParticipantServiceImpl implements ParticipantService {
 
 }
