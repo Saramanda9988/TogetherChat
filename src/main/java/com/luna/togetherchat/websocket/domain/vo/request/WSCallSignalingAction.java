@@ -1,5 +1,6 @@
 package com.luna.togetherchat.websocket.domain.vo.request;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,9 @@ public class WSCallSignalingAction {
 
     @Schema(description = "通话类型：1-语音通话，2-视频通话")
     private Integer callType;
+
+    @Schema(description = "会话类型 1一对一通话 2群聊")
+    private Integer sessionType;
 
     @Schema(description = "通话请求的过期时间戳")
     private Long expireTime;

@@ -1,9 +1,5 @@
 package com.luna.togetherchat.websocket.domain.enums;
 
-import com.luna.togetherchat.websocket.domain.vo.request.WSCallAgree;
-import com.luna.togetherchat.websocket.domain.vo.request.WSCallCancel;
-import com.luna.togetherchat.websocket.domain.vo.request.WSCallReject;
-import com.luna.togetherchat.websocket.domain.vo.request.WSCallSignalingAction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

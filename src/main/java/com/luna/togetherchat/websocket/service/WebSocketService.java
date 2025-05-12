@@ -1,12 +1,17 @@
 package com.luna.togetherchat.websocket.service;
 
 
-import com.luna.togetherchat.call.domain.request.CallingRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
+import com.luna.togetherchat.common.domain.vo.request.websocket.WSBaseReq;
 import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.request.WSCallSignalingAction;
 import io.netty.channel.Channel;
 
+import java.util.List;
+
 public interface WebSocketService {
+    List<Long> getOnlineUserId();
+
     /**
      * 处理所有ws连接的事件
      *
@@ -43,7 +48,5 @@ public interface WebSocketService {
 
     void handleHeartBeat(Channel channel);
 
-    void sendWebrtcSignal(String content, Channel channel);
-
-    void handleCallSignaling(CallingRequest callingRequest, Channel channel);
+    void handleCallSignaling(WSCallSignalingAction signalingAction, Channel channel);
 }

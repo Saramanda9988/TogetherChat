@@ -38,7 +38,10 @@ public class Session implements Serializable {
 
     @Schema(description = "会话类型 1一对一通话 2群聊")
     @TableField("type")
-    private Integer type;
+    private Integer sessionType;
+
+    @Schema(description = "通话类型：1-语音通话，2-视频通话")
+    private Integer callType;
 
     @Schema(description = "创建者用户ID")
     @TableField("creator_id")

@@ -25,12 +25,7 @@ public enum WSRespTypeEnum {
     ROLE_CHANGE(12, "角色变动", WSRoleChange.class),
     BACKGROUND_CHANGE(13, "群背景变动", WSBackgroundChange.class),
     ROOM_DISSOLVE(14,"房间解散", WSRoomDissolve.class),
-    CALL_SIGNAL(15, "通话信令", WSCallSignalingAction.class),
-    // 下面的是通话信令可能是不需要的
-    AGREE_CALL(16, "通话同意", WSCallAgree.class),
-    REJECT_CALL(17, "通话拒绝", WSCallReject.class),
-    CANCEL_CALL(18, "挂断通话", WSCallCancel.class);
-
+    CALL_SIGNAL(15, "通话信令", WSCallSignalingAction.class),;
 
     private final Integer type;
     private final String desc;

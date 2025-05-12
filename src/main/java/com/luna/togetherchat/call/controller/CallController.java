@@ -22,7 +22,7 @@ public class CallController {
     private final CallService callService;
 
     @PostMapping("/initiate")
-    @Operation(summary = "发起通话", description = "发起语音或视频通话")
+    @Operation(summary = "发起通话(备用)", description = "发起语音或视频通话")
     public ApiResult<Void> initiateCall(@RequestBody @Valid CallingRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.initiateCall(request, userId);
@@ -30,7 +30,7 @@ public class CallController {
     }
 
     @PostMapping("/accept")
-    @Operation(summary = "接受通话", description = "接受来电")
+    @Operation(summary = "接受通话(备用)", description = "接受来电")
     public ApiResult<Void> acceptCall(@RequestBody @Valid CallingAcceptRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.acceptCall(request, userId);
@@ -38,7 +38,7 @@ public class CallController {
     }
 
     @PostMapping("/reject")
-    @Operation(summary = "拒绝通话", description = "拒绝来电")
+    @Operation(summary = "拒绝通话(备用)", description = "拒绝来电")
     public ApiResult<Void> rejectCall(@RequestBody @Valid CallingRejectRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.rejectCall(request, userId);
@@ -46,7 +46,7 @@ public class CallController {
     }
 
     @PostMapping("/cancel")
-    @Operation(summary = "结束通话", description = "挂断正在进行的通话")
+    @Operation(summary = "结束通话(备用)", description = "挂断正在进行的通话")
     public ApiResult<Void> endCall(@RequestBody @Valid CallingCancelRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.endCall(request, userId);

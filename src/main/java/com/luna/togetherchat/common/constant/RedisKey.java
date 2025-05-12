@@ -38,7 +38,37 @@ public class RedisKey {
     /** 用户的信息汇总 */
     public static final String USER_SUMMARY_STRING = "userSummary:uid_%d";
 
+    /** 用户当前通话会话 */
+    public static final String USER_CALL_SESSION = "userCallSession:uid_%d";
+
+    /** 通话会话参与者 */
+    public static final String CALL_SESSION_MEMBERS = "callSessionMembers:sid_%d";
+
+    /** 通话会话锁 */
+    public static final String CALL_SESSION_LOCK = "callSessionLock:sid_%d:uid_%d";
+
     public static String getKey(String key, Object... objects) {
         return BASE_KEY + String.format(key, objects);
+    }
+
+    /**
+     * 获取用户当前通话会话的键
+     */
+    public static String getUserCallSessionKey(Long userId) {
+        return String.format(USER_CALL_SESSION, userId);
+    }
+
+    /**
+     * 获取通话会话参与者的键
+     */
+    public static String getCallSessionMembersKey(Long sessionId) {
+        return String.format(CALL_SESSION_MEMBERS, sessionId);
+    }
+
+    /**
+     * 获取通话会话锁的键
+     */
+    public static String getCallSessionLockKey(Long sessionId, Long userId) {
+        return String.format(CALL_SESSION_LOCK, sessionId, userId);
     }
 }

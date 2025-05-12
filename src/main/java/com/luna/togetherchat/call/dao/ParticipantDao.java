@@ -7,4 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ParticipantDao extends ServiceImpl<ParticipantMapper, Participant> {
+    public Participant getBySessionIdAndUserId(Long sessionId, Long receiverId) {
+        return lambdaQuery()
+                .eq(Participant::getSessionId, sessionId)
+                .eq(Participant::getUserId, receiverId)
+                .one();
+    }
 }

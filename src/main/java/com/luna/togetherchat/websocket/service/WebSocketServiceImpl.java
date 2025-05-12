@@ -3,7 +3,6 @@ package com.luna.togetherchat.websocket.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import com.luna.togetherchat.call.domain.request.CallingRequest;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.chat.service.ChatService;
 import com.luna.togetherchat.common.config.ThreadPoolConfig;
@@ -12,8 +11,9 @@ import com.luna.togetherchat.common.utils.RequestHolder;
 import com.luna.togetherchat.websocket.domain.dto.WSChannelExtraDTO;
 import com.luna.togetherchat.websocket.domain.enums.WSRespTypeEnum;
 import com.luna.togetherchat.websocket.domain.vo.request.*;
+import com.luna.togetherchat.websocket.handler.SignalingHandler;
 import com.luna.togetherchat.websocket.util.NettyUtil;
-import com.luna.togetherchat.call.enums.CallingSignalEnum;
+import com.luna.togetherchat.websocket.domain.enums.CallingSignalEnum;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import static com.luna.togetherchat.call.enums.CallingSignalEnum.OFFER;
 
 /**
  * Description: websocket处理类
@@ -52,11 +50,20 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Qualifier(ThreadPoolConfig.WS_EXECUTOR)
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+    // 替换直接依赖CallService
+    @Autowired
+    private SignalingHandler signalingHandler;
+
     /*==========================websocket连接==========================*/
     // 处理所有ws连接的事件
 
+    @Override
     public List<Long> getOnlineUserId() {
         return ONLINE_UID_MAP.keySet().stream().toList();
+    }
+
+    public WSChannelExtraDTO getChannelExt(Channel channel) {
+        return ONLINE_WS_MAP.get(channel);
     }
 
     @Override
@@ -156,144 +163,24 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     /*=====================websocket音视频信令发送============================== */
-    @Override
-    public void sendWebrtcSignal(String content, Channel channel) {
-        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
-        RequestInfo info = new RequestInfo();
-        info.setUserId(wsChannelExtraDTO.getUid());
-        RequestHolder.set(info);
-    }
-
     /**
      * 处理前端信令
-     * @param callingRequest
+     *
+     * @param signalingAction
      * @param channel
      */
     @Override
-    public void handleCallSignaling(CallingRequest callingRequest, Channel channel) {
+    public void handleCallSignaling(WSCallSignalingAction signalingAction, Channel channel) {
         // 获取发送者信息
         WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
         Long callerId = wsChannelExtraDTO.getUid();
-        
+
         // 设置请求上下文
         RequestInfo info = new RequestInfo();
         info.setUserId(callerId);
         RequestHolder.set(info);
-        
-        CallingSignalEnum callingSignalEnum = CallingSignalEnum.of(callingRequest.getType());
-        log.info("收到WebRTC信令: type={}, caller={}, receivers={}", 
-                 callingSignalEnum, callerId, callingRequest.getReceiverId());
-        
-        switch (callingSignalEnum) {
-            case OFFER:
-                // 处理通话请求信令
-                handleOfferSignal(callingRequest, callerId);
-                break;
-            case ACCEPT:
-                // 处理接受通话信令
-                handleAcceptSignal(callingRequest, callerId);
-                break;
-            case REJECT:
-                // 处理拒绝通话信令
-                handleRejectSignal(callingRequest, callerId);
-                break;
-            case CANCEL:
-                // 处理取消通话信令
-                handleCancelSignal(callingRequest, callerId);
-                break;
-            default:
-                log.error("未知信令类型: {}", callingRequest.getType());
-        }
-    }
 
-    /**
-     * 处理通话请求信令(OFFER)
-     */
-    private void handleOfferSignal(CallingRequest callingRequest, Long callerId) {
-        // 构建通话请求消息
-        WSCallRequest callRequest = WSCallRequest.builder()
-                .callerId(callerId)
-                .receiverId(callingRequest.getReceiverId().get(0)) // 假设只有一个接收者
-                .callType(callingRequest.getExtra()) // 假设extra字段存储通话类型(1:语音,2:视频)
-                .expireTime(callingRequest.getExpireTime())
-                .build();
-        
-        // 构建WebSocket响应
-        WSBaseResp<WSCallRequest> wsBaseResp = new WSBaseResp<>();
-        wsBaseResp.setType(WSRespTypeEnum.CALL_SIGNAL.getType());
-        wsBaseResp.setData(callRequest);
-        
-        // 发送给接收者
-        callingRequest.getReceiverId().forEach(receiverId -> {
-            sendToUid(wsBaseResp, receiverId);
-            log.info("向用户{}发送通话请求", receiverId);
-        });
+        // 委托给信令处理器
+        signalingHandler.handleSignaling(signalingAction, channel, callerId);
     }
-
-    /**
-     * 处理接受通话信令(ACCEPT)
-     */
-    private void handleAcceptSignal(CallingRequest callingRequest, Long accepterId) {
-        // 构建接受通话消息
-        WSCallAgree callAgree = WSCallAgree.builder()
-                .callerId(callingRequest.getReceiverId().get(0)) // 原始呼叫者
-                .receiverId(accepterId) // 接受通话的人
-                .callType(callingRequest.getExtra())
-                .build();
-        
-        // 构建WebSocket响应
-        WSBaseResp<WSCallAgree> wsBaseResp = new WSBaseResp<>();
-        wsBaseResp.setType(WSRespTypeEnum.AGREE_CALL.getType());
-        wsBaseResp.setData(callAgree);
-        
-        // 发送给原始呼叫者
-        Long originalCallerId = callingRequest.getReceiverId().get(0);
-        sendToUid(wsBaseResp, originalCallerId);
-        log.info("用户{}接受了来自用户{}的通话", accepterId, originalCallerId);
-    }
-
-    /**
-     * 处理拒绝通话信令(REJECT)
-     */
-    private void handleRejectSignal(CallingRequest callingRequest, Long rejecterId) {
-        // 构建拒绝通话消息
-        WSCallReject callReject = WSCallReject.builder()
-                .callerId(callingRequest.getReceiverId().get(0)) // 原始呼叫者
-                .receiverId(rejecterId) // 拒绝通话的人
-                .rejectReason(callingRequest.getExtra()) // 假设extra字段存储拒绝原因
-                .build();
-        
-        // 构建WebSocket响应
-        WSBaseResp<WSCallReject> wsBaseResp = new WSBaseResp<>();
-        wsBaseResp.setType(WSRespTypeEnum.REJECT_CALL.getType());
-        wsBaseResp.setData(callReject);
-        
-        // 发送给原始呼叫者
-        Long originalCallerId = callingRequest.getReceiverId().get(0);
-        sendToUid(wsBaseResp, originalCallerId);
-        log.info("用户{}拒绝了来自用户{}的通话", rejecterId, originalCallerId);
-    }
-
-    /**
-     * 处理取消通话信令(CANCEL)
-     */
-    private void handleCancelSignal(CallingRequest callingRequest, Long cancelerId) {
-        // 构建取消通话消息
-        WSCallCancel callCancel = WSCallCancel.builder()
-                .userId(cancelerId)
-                .cancelReason(callingRequest.getExtra()) // 假设extra字段存储取消原因
-                .build();
-        
-        // 构建WebSocket响应
-        WSBaseResp<WSCallCancel> wsBaseResp = new WSBaseResp<>();
-        wsBaseResp.setType(WSRespTypeEnum.CANCEL_CALL.getType());
-        wsBaseResp.setData(callCancel);
-        
-        // 发送给所有接收者
-        callingRequest.getReceiverId().forEach(receiverId -> {
-            sendToUid(wsBaseResp, receiverId);
-            log.info("向用户{}发送通话取消通知", receiverId);
-        });
-    }
-
 }
