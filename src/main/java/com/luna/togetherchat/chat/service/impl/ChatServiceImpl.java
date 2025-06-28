@@ -46,6 +46,8 @@ public class ChatServiceImpl implements ChatService {
 
     private final PushService pushService;
 
+    private final MessageSaveService messageSaveService;
+
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final MessageDao messageDao;
@@ -94,7 +96,8 @@ public class ChatServiceImpl implements ChatService {
 
         // 推动新消息并落库
         pushService.sendPushMsg(wsBaseResp, userIdList);
-        applicationEventPublisher.publishEvent(new MessageSendEvent(this, message));
+        messageSaveService.savePushMsg(message);
+//        applicationEventPublisher.publishEvent(new MessageSendEvent(this, message));
     }
 
     /**

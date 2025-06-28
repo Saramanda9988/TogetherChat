@@ -15,7 +15,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class MessageSendListener {
 
     @Autowired
-    private MessageDao messageDao;;
+    private MessageDao messageDao;
 
     // 发送事件
     @TransactionalEventListener(

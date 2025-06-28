@@ -16,6 +16,10 @@ public interface MQConstant {
     String MYSQL_CHANGE_QUEUE = "mysql.change.queue";
     String MYSQL_CHANGE_EXCHANGE = "mysql.change.exchange";
 
+    String MESSAGE_SAVE_QUEUE = "message.save.queue";
+    String MESSAGE_SAVE_EXCHANGE = "message.save.exchange";
+    String MESSAGE_SAVE_ROUTING_KEY = "message.save.#"; // 监听所有以 message.save. 开头的路由键
+    String MESSAGE_SAVE_KEY = "message.save";
 
     /**
      * (授权完成后)登录信息mq

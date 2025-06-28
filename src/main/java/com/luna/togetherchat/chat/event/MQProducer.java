@@ -3,6 +3,10 @@ package com.luna.togetherchat.chat.event;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.luna.togetherchat.common.constant.MQConstant;
+
+import static com.luna.togetherchat.common.constant.MQConstant.MESSAGE_SAVE_KEY;
+
 
 /**
  * Description: 发送mq工具类
@@ -22,4 +26,7 @@ public class MQProducer {
         rabbitTemplate.convertAndSend(exchange,"123", body);
     }
 
+    public void saveMsg(String exchange, Object body) {
+        rabbitTemplate.convertAndSend(exchange, MESSAGE_SAVE_KEY, body);
+    }
 }
