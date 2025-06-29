@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SessionDao extends ServiceImpl<SessionMapper, Session> {
+
 }
