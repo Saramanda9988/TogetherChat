@@ -20,6 +20,19 @@ import java.util.Set;
  * 校验工具类
  */
 public class AssertUtil {
+    /**
+     * 抛出业务异常
+     */
+    private static void throwException(String msg) {
+        throwException(null, msg);
+    }
+
+    private static void throwException(ErrorEnum errorEnum, Object... arg) {
+        if (Objects.isNull(errorEnum)) {
+            errorEnum = BusinessErrorEnum.BUSINESS_ERROR;
+        }
+        throw new BusinessException(errorEnum.getErrorCode(), MessageFormat.format(errorEnum.getErrorMsg(), arg));
+    }
 
     /**
      * 校验到失败就结束
@@ -88,7 +101,17 @@ public class AssertUtil {
         return new HashMap<>();
     }
 
-    //如果不是true，则抛异常
+    private static boolean isEmpty(Object obj) {
+        return ObjectUtil.isEmpty(obj);
+    }
+
+    //****************************校验方法******************************//
+
+    /**
+     * 如果不是true，则抛异常
+     * @param expression
+     * @param msg
+     */
     public static void isTrue(boolean expression, String msg) {
         if (!expression) {
             throwException(msg);
@@ -101,69 +124,98 @@ public class AssertUtil {
         }
     }
 
-    // 如果是true，则抛异常
+    /**
+     * 如果是true，则抛异常
+     * @param expression
+     * @param msg
+     */
     public static void isFalse(boolean expression, String msg) {
         if (expression) {
             throwException(msg);
         }
     }
 
-    //如果是true，则抛异常
     public static void isFalse(boolean expression, ErrorEnum errorEnum, Object... args) {
         if (expression) {
             throwException(errorEnum, args);
         }
     }
 
-    //如果不是非空对象，则抛异常
+    /**
+     * 如果不是非空对象，则抛异常
+     * @param obj
+     * @param msg
+     */
     public static void isNotEmpty(Object obj, String msg) {
         if (isEmpty(obj)) {
             throwException(msg);
         }
     }
 
-    //如果不是非空对象，则抛异常
     public static void isNotEmpty(Object obj, ErrorEnum errorEnum, Object... args) {
         if (isEmpty(obj)) {
             throwException(errorEnum, args);
         }
     }
 
-    //如果是非空对象，则抛异常
+    /**
+     * 如果是非空对象，则抛异常
+     * @param obj
+     * @param msg
+     */
     public static void isEmpty(Object obj, String msg) {
         if (!isEmpty(obj)) {
             throwException(msg);
         }
     }
 
+    public static void isEmpty(Object obj, ErrorEnum errorEnum, Object... args) {
+        if (!isEmpty(obj)) {
+            throwException(errorEnum, args);
+        }
+    }
+
+    /**
+     * 如果o1和o2不相等，则抛异常
+     * @param o1
+     * @param o2
+     * @param msg
+     */
     public static void equal(Object o1, Object o2, String msg) {
         if (!ObjectUtil.equal(o1, o2)) {
             throwException(msg);
         }
     }
 
+    public static void equal(Object o1, Object o2, ErrorEnum errorEnum, Object... args) {
+        if (!ObjectUtil.equal(o1, o2)) {
+            throwException(errorEnum, args);
+        }
+    }
+
+    /**
+     * 如果o1和o2相等，则抛异常
+     * @param o1
+     * @param o2
+     * @param msg
+     */
     public static void notEqual(Object o1, Object o2, String msg) {
         if (ObjectUtil.equal(o1, o2)) {
             throwException(msg);
         }
     }
 
-    private static boolean isEmpty(Object obj) {
-        return ObjectUtil.isEmpty(obj);
-    }
-
-    private static void throwException(String msg) {
-        throwException(null, msg);
-    }
-
-    private static void throwException(ErrorEnum errorEnum, Object... arg) {
-        if (Objects.isNull(errorEnum)) {
-            errorEnum = BusinessErrorEnum.BUSINESS_ERROR;
+    public static void notEqual(Object o1, Object o2, ErrorEnum errorEnum, Object... args) {
+        if (ObjectUtil.equal(o1, o2)) {
+            throwException(errorEnum, args);
         }
-        throw new BusinessException(errorEnum.getErrorCode(), MessageFormat.format(errorEnum.getErrorMsg(), arg));
     }
 
-
+    /**
+     * 如果object为null，则抛异常
+     * @param object
+     * @param errorMessage
+     */
     public static void isNotNull(Object object, String errorMessage) {
         if (ObjectUtil.isNull(object)) {
             throwException(errorMessage);
@@ -176,9 +228,20 @@ public class AssertUtil {
         }
     }
 
+    /**
+     * 如果object不为null，则抛异常
+     * @param object
+     * @param errorMessage
+     */
     public static void isNull(Object object, String errorMessage) {
         if (ObjectUtil.isNotNull(object)) {
             throwException(errorMessage);
+        }
+    }
+
+    public static void isNull(Object object, ErrorEnum errorEnum, Object... args) {
+        if (ObjectUtil.isNotNull(object)) {
+            throwException(errorEnum, args);
         }
     }
 }
