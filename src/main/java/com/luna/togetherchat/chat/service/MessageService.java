@@ -11,6 +11,8 @@ import com.luna.togetherchat.chat.domain.entity.Message;
  * @author starrybamboo
  * @since 2025-03-26
  */
-public interface MessageService extends IService<Message> {
+public interface MessageService{
+    void savePushMsg(Message msg);
 
+    void changePushMsg(Message msg);
 }

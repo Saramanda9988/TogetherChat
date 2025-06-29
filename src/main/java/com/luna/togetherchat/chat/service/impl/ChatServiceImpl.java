@@ -10,24 +10,20 @@ import com.luna.togetherchat.chat.domain.request.message.ChatMessageUpdateReques
 import com.luna.togetherchat.chat.domain.response.ChatMessageResponse;
 import com.luna.togetherchat.chat.enums.MessageErrorEnum;
 import com.luna.togetherchat.chat.enums.MessageStatusEnum;
-import com.luna.togetherchat.chat.enums.MessageTypeEnum;
-import com.luna.togetherchat.chat.event.MessageSendEvent;
 import com.luna.togetherchat.chat.service.ChatService;
+import com.luna.togetherchat.chat.service.MessageService;
 import com.luna.togetherchat.chat.service.strategy.message.AbstractMessageHandler;
 import com.luna.togetherchat.chat.service.strategy.message.MessageHandlerFactory;
 import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.togetherchat.common.exception.BusinessException;
 import com.luna.togetherchat.common.utils.AssertUtil;
-import com.luna.togetherchat.common.utils.RequestHolder;
 import com.luna.togetherchat.group.dao.GroupMemberDao;
 import com.luna.togetherchat.group.domain.entity.GroupMember;
-import com.luna.togetherchat.group.enums.GroupErrorEnum;
 import com.luna.togetherchat.group.enums.MemberTypeEnum;
 import com.luna.togetherchat.websocket.domain.enums.WSRespTypeEnum;
 import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
 import com.luna.togetherchat.websocket.service.PushService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,9 +42,7 @@ public class ChatServiceImpl implements ChatService {
 
     private final PushService pushService;
 
-    private final MessageSaveService messageSaveService;
-
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final MessageService messageService;
 
     private final MessageDao messageDao;
 
@@ -77,11 +71,11 @@ public class ChatServiceImpl implements ChatService {
         message.setUpdateTime(LocalDateTime.now());
 
         // 推送，然后异步落库
-        // TODO:要进行用rabbitmq进行异步落库
-        sendAndSave(message);
+        send(message);
+        messageService.savePushMsg(message);
     }
 
-    public void sendAndSave(Message message) {
+    public void send(Message message) {
         // 创建消息回复
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setMessage(message);
@@ -94,10 +88,8 @@ public class ChatServiceImpl implements ChatService {
         wsBaseResp.setType(WSRespTypeEnum.MESSAGE.getType());
         wsBaseResp.setData(chatMessageResponse);
 
-        // 推动新消息并落库
+        // 推动新消息
         pushService.sendPushMsg(wsBaseResp, userIdList);
-        messageSaveService.savePushMsg(message);
-//        applicationEventPublisher.publishEvent(new MessageSendEvent(this, message));
     }
 
     /**
@@ -119,7 +111,8 @@ public class ChatServiceImpl implements ChatService {
         message.setSpecialEffects(request.getSpecialEffects());
         message.setStatus(MessageStatusEnum.MODIFY.getStatus());
 
-        sendAndSave(message);
+        send(message);
+        messageService.changePushMsg(message);
     }
 
     /**
@@ -132,22 +125,20 @@ public class ChatServiceImpl implements ChatService {
     public void deleteMessage(ChatMessageDeleteRequest request, Long userId) {
         // 查询当前用户群角色
         GroupMember member = groupMemberDao.getMemberByGroupIdAndUserId(request.getGroupId(), userId);
-        if (Objects.isNull(member)) {
-            throw new BusinessException(MessageErrorEnum.PERMISSION_DENY);
-        }
+        AssertUtil.isNull(member, MessageErrorEnum.PERMISSION_DENY);
 
         // 检查是否有权限
         if (Objects.equals(member.getRole(), MemberTypeEnum.MEMBER.getType()) && !Objects.equals(request.getOwnerId(), userId)) {
             throw new BusinessException(MessageErrorEnum.DELETE_DENY);
         }
+
         // 检查消息是否存在
         Message message = messageDao.getById(request.getMessageID());
-        if (Objects.isNull(message)) {
-            throw new BusinessException(MessageErrorEnum.NO_SUCH_MESSAGE);
-        }
+        AssertUtil.isNull(message, MessageErrorEnum.NO_SUCH_MESSAGE);
 
         message.setStatus(MessageStatusEnum.DELETE.getStatus());
-        sendAndSave(message);
+        send(message);
+        messageService.changePushMsg(message);
     }
 
     /**

@@ -29,7 +29,6 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         this.webSocketService = SpringUtil.getBean(WebSocketService.class);
-        
     }
 
     // 客户端离线

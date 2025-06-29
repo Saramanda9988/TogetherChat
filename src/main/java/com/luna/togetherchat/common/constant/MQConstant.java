@@ -13,13 +13,24 @@ public interface MQConstant {
     String PUSH_EXCHANGE = "websocket.push.exchange";
     String PUSH_QUEUE = "websocket.push.queue";
 
+    /**
+     * flink交换机
+     */
     String MYSQL_CHANGE_QUEUE = "mysql.change.queue";
     String MYSQL_CHANGE_EXCHANGE = "mysql.change.exchange";
 
+    /**
+     * 消息保存相关交换机
+     */
     String MESSAGE_SAVE_QUEUE = "message.save.queue";
     String MESSAGE_SAVE_EXCHANGE = "message.save.exchange";
     String MESSAGE_SAVE_ROUTING_KEY = "message.save.#"; // 监听所有以 message.save. 开头的路由键
     String MESSAGE_SAVE_KEY = "message.save";
+
+    String MESSAGE_CHANGE_QUEUE = "message.change.queue";
+    String MESSAGE_CHANGE_EXCHANGE = "message.change.exchange";
+    String MESSAGE_CHANGE_ROUTING_KEY = "message.change.#"; // 监听所有以 message.change. 开头的路由键
+    String MESSAGE_CHANGE_KEY = "message.change";
 
     /**
      * (授权完成后)登录信息mq
