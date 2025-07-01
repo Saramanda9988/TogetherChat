@@ -1,6 +1,6 @@
 package com.luna.togetherchat.websocket.domain.enums;
 
-import com.luna.togetherchat.websocket.domain.vo.request.*;
+import com.luna.togetherchat.websocket.domain.vo.chat.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,8 +24,7 @@ public enum WSRespTypeEnum {
     MEMBER_CHANGE(11, "成员变动", WSMemberChange.class),
     ROLE_CHANGE(12, "角色变动", WSRoleChange.class),
     BACKGROUND_CHANGE(13, "群背景变动", WSBackgroundChange.class),
-    ROOM_DISSOLVE(14,"房间解散", WSRoomDissolve.class),
-    CALL_SIGNAL(15, "通话信令", WSCallSignalingAction.class),;
+    ROOM_DISSOLVE(14,"房间解散", WSRoomDissolve.class),;
 
     private final Integer type;
     private final String desc;

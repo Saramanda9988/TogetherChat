@@ -14,7 +14,12 @@ public enum WSReqTypeEnum {
     LOGIN(1, "登录"),
     HEARTBEAT(2, "心跳包"),
     MESSAGE(3, "消息"),
-    WEBRTC(4, "webrtc信令")
+    ENTER(4, "进入房间"),
+    OFFER(5, "沟通媒体设备信息"),
+    ANSWER(6, "回复媒体设备信息"),
+    CANDIDATE(7, "ICE 候选信息,交换网络信息"),
+    LEAVE(8, "离开房间"),
+    END(9, "结束房间")
     ;
 
     private final Integer type;

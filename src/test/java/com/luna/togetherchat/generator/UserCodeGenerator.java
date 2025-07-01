@@ -24,7 +24,7 @@ public class UserCodeGenerator {
                 })
                 .dataSourceConfig(builder -> builder.schema("togetherchat"))
                 .packageConfig(builder -> {
-                    builder.parent("com.luna.togetherchat.user")
+                    builder.parent("com.luna.togetherchat.message")
                             .controller("controller")
                             .entity("domain.entity")
                             .mapper("mapper")
@@ -32,20 +32,18 @@ public class UserCodeGenerator {
                             .serviceImpl("service.impl")
                             .xml("mapper")
                             .pathInfo(Collections.singletonMap(OutputFile.xml,
-                                    System.getProperty("user.dir") + "/src/main/resources/mapper/user"));
+                                    System.getProperty("user.dir") + "/src/main/resources/mapper/message"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("user_info", "user_blacklist");
+                    builder.addInclude("user_info");
                     builder.controllerBuilder().enableRestStyle();
                     builder.entityBuilder()
                             .enableLombok()
                             .enableTableFieldAnnotation()
                             .addTableFills(new Property("createTime", FieldFill.INSERT))
-                            .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
-                            .logicDeleteColumnName("is_deleted");
+                            .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE));
                     builder.mapperBuilder().enableFileOverride();
                     builder.serviceBuilder().enableFileOverride();
-                    builder.addTablePrefix("user_");
                 })
                 .templateEngine(new FreemarkerTemplateEngine())
                 .execute();

@@ -31,16 +31,12 @@ public class Session implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // TODO:记得修改数据库表结构
     @Schema(description = "会话ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long sessionId;
 
-    @Schema(description = "会话类型 1一对一通话 2群聊")
-    @TableField("type")
-    private Integer sessionType;
-
     @Schema(description = "通话类型：1-语音通话，2-视频通话")
+    @TableField("call_type")
     private Integer callType;
 
     @Schema(description = "创建者用户ID")

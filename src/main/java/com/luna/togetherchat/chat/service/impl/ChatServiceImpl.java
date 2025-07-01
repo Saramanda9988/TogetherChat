@@ -17,14 +17,13 @@ import com.luna.togetherchat.chat.service.strategy.message.MessageHandlerFactory
 import com.luna.togetherchat.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.togetherchat.common.exception.BusinessException;
 import com.luna.togetherchat.common.utils.AssertUtil;
-import com.luna.togetherchat.group.dao.GroupMemberDao;
-import com.luna.togetherchat.group.domain.entity.GroupMember;
-import com.luna.togetherchat.group.enums.MemberTypeEnum;
+import com.luna.togetherchat.room.dao.RoomMemberDao;
+import com.luna.togetherchat.room.domain.entity.RoomMember;
+import com.luna.togetherchat.room.enums.MemberTypeEnum;
 import com.luna.togetherchat.websocket.domain.enums.WSRespTypeEnum;
-import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
 import com.luna.togetherchat.websocket.service.PushService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class ChatServiceImpl implements ChatService {
 
     private final IdCache idCache;
 
-    private final GroupMemberDao groupMemberDao;
+    private final RoomMemberDao roomMemberDao;
 
     private final PushService pushService;
 
@@ -81,7 +80,7 @@ public class ChatServiceImpl implements ChatService {
         chatMessageResponse.setMessage(message);
 
         // 获取对应群组中的用户id
-        List<Long> userIdList = groupMemberDao.listUserIdByGroupId(message.getGroupId());
+        List<Long> userIdList = roomMemberDao.listUserIdByGroupId(message.getGroupId());
 
         // 构建WebsocketRep
         WSBaseResp<ChatMessageResponse> wsBaseResp = new WSBaseResp<>();
@@ -124,7 +123,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void deleteMessage(ChatMessageDeleteRequest request, Long userId) {
         // 查询当前用户群角色
-        GroupMember member = groupMemberDao.getMemberByGroupIdAndUserId(request.getGroupId(), userId);
+        RoomMember member = roomMemberDao.getMemberByGroupIdAndUserId(request.getGroupId(), userId);
         AssertUtil.isNull(member, MessageErrorEnum.PERMISSION_DENY);
 
         // 检查是否有权限
@@ -162,7 +161,7 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public CursorPageBaseResponse<Message> getMessageList(ChatMessagePageRequest request, Long userId) {
-        // TODO:以后改为包含mark的messageresponse
+
         // 得到消息的游标列表
         CursorPageBaseResponse<Message> cursorPage = messageDao.getCursorPage(request.getGroupId(), request, Long.MAX_VALUE);
 

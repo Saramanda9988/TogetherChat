@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 @Schema(name = "Participant", description = "")
 public class Participant implements Serializable {
 
-    // TODO:记得修改数据库表结构
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "参与记录ID")

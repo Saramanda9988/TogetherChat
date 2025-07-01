@@ -3,17 +3,20 @@ package com.luna.togetherchat.websocket.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.luna.togetherchat.call.domain.entity.Session;
+import com.luna.togetherchat.call.service.SessionService;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.chat.service.ChatService;
 import com.luna.togetherchat.common.config.ThreadPoolConfig;
 import com.luna.togetherchat.common.domain.dto.RequestInfo;
 import com.luna.togetherchat.common.utils.RequestHolder;
 import com.luna.togetherchat.websocket.domain.dto.WSChannelExtraDTO;
-import com.luna.togetherchat.websocket.domain.enums.WSRespTypeEnum;
-import com.luna.togetherchat.websocket.domain.vo.request.*;
-import com.luna.togetherchat.websocket.handler.SignalingHandler;
+import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSCandidate;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSEntry;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSLeave;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSOffer;
 import com.luna.togetherchat.websocket.util.NettyUtil;
-import com.luna.togetherchat.websocket.domain.enums.CallingSignalEnum;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -43,16 +46,21 @@ public class WebSocketServiceImpl implements WebSocketService {
     /** 所有在线的用户和对应的socket userId -> Channel列表 */
     private static final ConcurrentHashMap<Long, CopyOnWriteArrayList<Channel>> ONLINE_UID_MAP = new ConcurrentHashMap<>();
 
+    /** 所有在线的用户和对应的通话会话 userId -> sessionId*/
+    private static final ConcurrentHashMap<Long, Long> ONLINE_SESSION_UID_MAP = new ConcurrentHashMap<>();
+
+    /** 在某个会议中的用户列表 sessionId -> userId列表*/
+    private static final ConcurrentHashMap<Long, CopyOnWriteArrayList<Long>> ONLINE_SESSION_MAP = new ConcurrentHashMap<>();
+
     @Autowired
     private ChatService chatService;
 
     @Autowired
+    private SessionService sessionService;
+
+    @Autowired
     @Qualifier(ThreadPoolConfig.WS_EXECUTOR)
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
-    // 替换直接依赖CallService
-    @Autowired
-    private SignalingHandler signalingHandler;
 
     /*==========================websocket连接==========================*/
     // 处理所有ws连接的事件
@@ -132,14 +140,20 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void sendToUid(WSBaseResp<?> wsBaseResp, Long uid) {
-        CopyOnWriteArrayList<Channel> channels = ONLINE_UID_MAP.get(uid);
-        if (CollectionUtil.isEmpty(channels)) {
-            log.info("用户：{}不在线", uid);
-            return;
+        sendToUid(wsBaseResp, List.of(uid));
+    }
+
+    private void sendToUid(WSBaseResp<?> wsBaseResp, List<Long> uids) {
+        for (Long uid : uids) {
+            CopyOnWriteArrayList<Channel> channels = ONLINE_UID_MAP.get(uid);
+            if (CollectionUtil.isEmpty(channels)) {
+                log.info("用户：{}不在线", uid);
+                return;
+            }
+            channels.forEach(channel -> {
+                threadPoolTaskExecutor.execute(() -> sendMsg(channel, wsBaseResp));
+            });
         }
-        channels.forEach(channel -> {
-            threadPoolTaskExecutor.execute(() -> sendMsg(channel, wsBaseResp));
-        });
     }
 
     // 给本地channel发送消息
@@ -163,24 +177,48 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     /*=====================websocket音视频信令发送============================== */
-    /**
-     * 处理前端信令
-     *
-     * @param signalingAction
-     * @param channel
-     */
     @Override
-    public void handleCallSignaling(WSCallSignalingAction signalingAction, Channel channel) {
-        // 获取发送者信息
-        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
-        Long callerId = wsChannelExtraDTO.getUid();
+    public void handleEntry(WSEntry data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("会议不存在：{}", data.getMeetId());
+            return;
+        }
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(data.getMeetId());
+        userList.add(data.getUserId());
+        ONLINE_SESSION_UID_MAP.putIfAbsent(data.getUserId(), data.getMeetId());
 
-        // 设置请求上下文
-        RequestInfo info = new RequestInfo();
-        info.setUserId(callerId);
-        RequestHolder.set(info);
+        WSBaseResp<Object> resp = new WSBaseResp<>();
+        resp.setType(data.getType());
+        resp.setData(WSEntry.builder()
+                .userAvatar(data.getUserAvatar())
+                .userId(data.getUserId())
+                .userName(data.getUserName())
+                .build());
 
-        // 委托给信令处理器
-        signalingHandler.handleSignaling(signalingAction, channel, callerId);
+        // 创建新列表，排除当前用户
+        List<Long> targetUsers = userList.stream()
+                .filter(uid -> !Objects.equals(uid, data.getUserId()))
+                .toList();
+        sendToUid(resp, targetUsers);
+    }
+
+    @Override
+    public void handleOffer(WSOffer data, Channel channel) {
+
+    }
+
+    @Override
+    public void handleAnswer(WSOffer data, Channel channel) {
+
+    }
+
+    @Override
+    public void handleCandidate(WSCandidate data, Channel channel) {
+
+    }
+
+    @Override
+    public void handleLeave(WSLeave data, Channel channel) {
+
     }
 }

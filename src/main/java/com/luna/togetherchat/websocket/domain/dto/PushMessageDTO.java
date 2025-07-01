@@ -1,7 +1,7 @@
 package com.luna.togetherchat.websocket.domain.dto;
 
 import com.luna.togetherchat.websocket.domain.enums.WSPushTypeEnum;
-import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

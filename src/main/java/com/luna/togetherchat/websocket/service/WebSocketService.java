@@ -2,9 +2,11 @@ package com.luna.togetherchat.websocket.service;
 
 
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
-import com.luna.togetherchat.common.domain.vo.request.websocket.WSBaseReq;
-import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
-import com.luna.togetherchat.websocket.domain.vo.request.WSCallSignalingAction;
+import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSCandidate;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSEntry;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSLeave;
+import com.luna.togetherchat.websocket.domain.vo.signalling.WSOffer;
 import io.netty.channel.Channel;
 
 import java.util.List;
@@ -48,5 +50,13 @@ public interface WebSocketService {
 
     void handleHeartBeat(Channel channel);
 
-    void handleCallSignaling(WSCallSignalingAction signalingAction, Channel channel);
+    void handleEntry(WSEntry data, Channel channel);
+
+    void handleOffer(WSOffer data, Channel channel);
+
+    void handleAnswer(WSOffer data, Channel channel);
+
+    void handleCandidate(WSCandidate data, Channel channel);
+
+    void handleLeave(WSLeave data, Channel channel);
 }

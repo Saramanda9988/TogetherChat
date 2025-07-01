@@ -4,7 +4,7 @@ package com.luna.togetherchat.websocket.service;
 import com.luna.togetherchat.chat.event.producer.MQProducer;
 import com.luna.togetherchat.common.constant.MQConstant;
 import com.luna.togetherchat.websocket.domain.dto.PushMessageDTO;
-import com.luna.togetherchat.websocket.domain.vo.request.WSBaseResp;
+import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
