@@ -1,7 +1,8 @@
 package com.luna.togetherchat.call.controller;
 
+import com.luna.togetherchat.call.domain.entity.Session;
 import com.luna.togetherchat.call.domain.request.*;
-import com.luna.togetherchat.call.domain.response.CallHistoryResponse;
+import com.luna.togetherchat.call.domain.response.SessionResponse;
 import com.luna.togetherchat.call.service.CallService;
 import com.luna.togetherchat.common.domain.vo.response.ApiResult;
 import com.luna.togetherchat.common.utils.RequestHolder;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/capi/call")
@@ -29,27 +32,18 @@ public class CallController {
         return ApiResult.success();
     }
 
-    @PostMapping("/accept")
-    @Operation(summary = "接受通话(备用)", description = "接受来电")
-    public ApiResult<Void> acceptCall(@RequestBody @Valid CallingAcceptRequest request) {
-        Long userId = RequestHolder.get().getUserId();
-        callService.acceptCall(request, userId);
-        return ApiResult.success();
-    }
-
-    @PostMapping("/reject")
-    @Operation(summary = "拒绝通话(备用)", description = "拒绝来电")
-    public ApiResult<Void> rejectCall(@RequestBody @Valid CallingRejectRequest request) {
-        Long userId = RequestHolder.get().getUserId();
-        callService.rejectCall(request, userId);
-        return ApiResult.success();
-    }
-
     @PostMapping("/cancel")
     @Operation(summary = "结束通话(备用)", description = "挂断正在进行的通话")
     public ApiResult<Void> endCall(@RequestBody @Valid CallingCancelRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.endCall(request, userId);
         return ApiResult.success();
+    }
+
+    @PostMapping("/history")
+    @Operation(summary = "获取通话历史", description = "获取用户的通话历史记录")
+    public ApiResult<List<SessionResponse>> getCallHistory() {
+        Long userId = RequestHolder.get().getUserId();
+        return ApiResult.success(callService.getCallHistory(userId));
     }
 }

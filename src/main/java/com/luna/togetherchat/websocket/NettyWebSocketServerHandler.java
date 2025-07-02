@@ -5,10 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.websocket.domain.vo.WSBaseReq;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSCandidate;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSEntry;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSLeave;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSOffer;
+import com.luna.togetherchat.websocket.domain.vo.signalling.*;
 import com.luna.togetherchat.websocket.enums.WSReqTypeEnum;
 import com.luna.togetherchat.websocket.service.WebSocketService;
 import com.luna.togetherchat.websocket.util.NettyUtil;
@@ -119,7 +116,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
                 break;
             case ANSWER:
                 String answerData = wsBaseReq.getData();
-                webSocketService.handleAnswer(JSONUtil.toBean(answerData, WSOffer.class), ctx.channel());
+                webSocketService.handleAnswer(JSONUtil.toBean(answerData, WSAnswer.class), ctx.channel());
                 break;
             case CANDIDATE:
                 String candidateData = wsBaseReq.getData();
@@ -128,6 +125,10 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             case LEAVE:
                 String leaveData = wsBaseReq.getData();
                 webSocketService.handleLeave(JSONUtil.toBean(leaveData, WSLeave.class), ctx.channel());
+                break;
+            case REJECT:
+                String rejectData = wsBaseReq.getData();
+                webSocketService.handleReject(JSONUtil.toBean(rejectData, WSReject.class), ctx.channel());
                 break;
             default:
                 log.info("未知类型");

@@ -19,7 +19,10 @@ public enum WSReqTypeEnum {
     ANSWER(6, "回复媒体设备信息"),
     CANDIDATE(7, "ICE 候选信息,交换网络信息"),
     LEAVE(8, "离开房间"),
-    END(9, "结束房间")
+    END(9, "结束房间"),
+    JOIN(10, "加入房间"),
+    REJECT(11, "拒绝加入房间"),
+    CANCEL(12, "结束房间通话"),
     ;
 
     private final Integer type;

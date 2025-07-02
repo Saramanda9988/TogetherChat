@@ -3,8 +3,8 @@ package com.luna.togetherchat.websocket.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.luna.togetherchat.call.domain.entity.Participant;
 import com.luna.togetherchat.call.domain.entity.Session;
-import com.luna.togetherchat.call.service.SessionService;
 import com.luna.togetherchat.chat.domain.request.message.ChatMessageRequest;
 import com.luna.togetherchat.chat.service.ChatService;
 import com.luna.togetherchat.common.config.ThreadPoolConfig;
@@ -12,10 +12,8 @@ import com.luna.togetherchat.common.domain.dto.RequestInfo;
 import com.luna.togetherchat.common.utils.RequestHolder;
 import com.luna.togetherchat.websocket.domain.dto.WSChannelExtraDTO;
 import com.luna.togetherchat.websocket.domain.vo.WSBaseResp;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSCandidate;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSEntry;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSLeave;
-import com.luna.togetherchat.websocket.domain.vo.signalling.WSOffer;
+import com.luna.togetherchat.websocket.domain.vo.signalling.*;
+import com.luna.togetherchat.websocket.enums.WSReqTypeEnum;
 import com.luna.togetherchat.websocket.util.NettyUtil;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -25,9 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -54,9 +50,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Autowired
     private ChatService chatService;
-
-    @Autowired
-    private SessionService sessionService;
 
     @Autowired
     @Qualifier(ThreadPoolConfig.WS_EXECUTOR)
@@ -173,7 +166,11 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
         public void handleHeartBeat(Channel channel) {
-        log.info("收到心跳消息 from 用户：{}", ONLINE_WS_MAP.get(channel).getUid());
+        log.info("[HEARTBEAT]收到心跳消息 from 用户：{}", ONLINE_WS_MAP.get(channel).getUid());
+        WSBaseResp<String> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.HEARTBEAT.getType());
+        resp.setData("pong");
+        sendMsg(channel, resp);
     }
 
     /*=====================websocket音视频信令发送============================== */
@@ -187,13 +184,9 @@ public class WebSocketServiceImpl implements WebSocketService {
         userList.add(data.getUserId());
         ONLINE_SESSION_UID_MAP.putIfAbsent(data.getUserId(), data.getMeetId());
 
-        WSBaseResp<Object> resp = new WSBaseResp<>();
+        WSBaseResp<WSEntry> resp = new WSBaseResp<>();
         resp.setType(data.getType());
-        resp.setData(WSEntry.builder()
-                .userAvatar(data.getUserAvatar())
-                .userId(data.getUserId())
-                .userName(data.getUserName())
-                .build());
+        resp.setData(data);
 
         // 创建新列表，排除当前用户
         List<Long> targetUsers = userList.stream()
@@ -204,21 +197,111 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void handleOffer(WSOffer data, Channel channel) {
-
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[OFFER]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSOffer> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.OFFER.getType());
+        resp.setData(data);
+        // 发送offer给目标用户
+        sendToUid(resp, targetId);
     }
 
     @Override
-    public void handleAnswer(WSOffer data, Channel channel) {
-
+    public void handleAnswer(WSAnswer data, Channel channel) {
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[ANSWER]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSAnswer> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.ANSWER.getType());
+        resp.setData(data);
+        // 发送answer给目标用户
+        sendToUid(resp, targetId);
     }
 
     @Override
     public void handleCandidate(WSCandidate data, Channel channel) {
-
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[CANDIDATE]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSCandidate> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.CANDIDATE.getType());
+        resp.setData(data);
+        // 发送candidate给目标用户
+        sendToUid(resp, targetId);
     }
 
     @Override
     public void handleLeave(WSLeave data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[LEAVE]会议不存在：{}", data.getMeetId());
+            return;
+        }
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(data.getMeetId());
+        userList.remove(data.getSourceId());
+        ONLINE_SESSION_UID_MAP.remove(data.getSourceId());
+    }
 
+    @Override
+    public void handleReject(WSReject data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[REJECT]会议不存在：{}", data.getMeetId());
+            return;
+        }
+        data.setSourceId(ONLINE_WS_MAP.get(channel).getUid());
+        WSBaseResp<WSReject> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.REJECT.getType());
+        resp.setData(data);
+        // 发送拒绝消息给目标用户
+        sendToUid(resp, data.getTargetId());
+    }
+
+    @Override
+    public void sendJoinSignalling(Session session, List<Participant> participants) {
+        Long userId = RequestHolder.get().getUserId();
+        ONLINE_SESSION_UID_MAP.put(userId, session.getSessionId());
+        CopyOnWriteArrayList<Long> userList = new CopyOnWriteArrayList<>();
+        userList.add(userId);
+        ONLINE_SESSION_MAP.put(session.getSessionId(), userList);
+        for (Long targetId : userList) {
+            WSJoin wsJoin = new WSJoin();
+            wsJoin.setMeetId(session.getSessionId());
+            wsJoin.setType(WSReqTypeEnum.JOIN.getType());
+            wsJoin.setSourceId(userId);
+            wsJoin.setTargetId(targetId);
+            wsJoin.setKey(UUID.randomUUID()
+                    .toString()
+                    .replace("-", "")
+                    .substring(0, 16));
+            WSBaseResp<WSJoin> resp = new WSBaseResp<>();
+            resp.setType(WSReqTypeEnum.JOIN.getType());
+            resp.setData(wsJoin);
+            sendToUid(resp, targetId);
+        }
+    }
+
+    public void sendCancelSignalling(Session session) {
+        WSCancel wsCancel = new WSCancel();
+        wsCancel.setMeetId(session.getSessionId());
+        wsCancel.setSourceId(RequestHolder.get().getUserId());
+        wsCancel.setType(WSReqTypeEnum.CANCEL.getType());
+        WSBaseResp<WSCancel> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.CANCEL.getType());
+        resp.setData(wsCancel);
+
+        // 发送信令给所有参与者
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(session.getSessionId());
+        if (CollectionUtil.isNotEmpty(userList)) {
+            sendToUid(resp, userList);
+        }
     }
 }

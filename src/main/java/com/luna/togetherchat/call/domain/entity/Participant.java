@@ -42,12 +42,4 @@ public class Participant implements Serializable {
     @Schema(description = "用户ID")
     @TableField("user_id")
     private Long userId;
-
-    @Schema(description = "加入时间")
-    @TableField("join_time")
-    private LocalDateTime joinTime;
-
-    @Schema(description = "离开时间")
-    @TableField("leave_time")
-    private LocalDateTime leaveTime;
 }
