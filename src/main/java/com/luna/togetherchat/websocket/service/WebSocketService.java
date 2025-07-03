@@ -64,4 +64,8 @@ public interface WebSocketService {
     void sendJoinSignalling(Session session, List<Participant> participants);
 
     void sendCancelSignalling(Session session);
+
+    int getActiveConnectionCount();
+
+    int getOnlineUserCount();
 }

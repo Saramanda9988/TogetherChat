@@ -304,4 +304,24 @@ public class WebSocketServiceImpl implements WebSocketService {
             sendToUid(resp, userList);
         }
     }
+
+    /**
+     * 获取当前在线用户数量
+     *
+     * @return 在线用户数
+     */
+    @Override
+    public int getOnlineUserCount() {
+        return ONLINE_UID_MAP.size();
+    }
+
+    /**
+     * 获取当前活跃连接数
+     *
+     * @return 活跃连接数
+     */
+    @Override
+    public int getActiveConnectionCount() {
+        return ONLINE_WS_MAP.size();
+    }
 }
