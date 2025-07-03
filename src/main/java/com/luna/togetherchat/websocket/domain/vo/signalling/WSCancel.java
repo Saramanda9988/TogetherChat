@@ -3,5 +3,5 @@ package com.luna.togetherchat.websocket.domain.vo.signalling;
 import lombok.*;
 
 @Data
-public class WSReject extends WSBaseSignalling{
+public class WSCancel extends WSBaseSignalling{
 }
