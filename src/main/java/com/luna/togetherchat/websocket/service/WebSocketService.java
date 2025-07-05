@@ -61,11 +61,15 @@ public interface WebSocketService {
 
     void handleReject(WSReject data, Channel channel);
 
-    void sendJoinSignalling(Session session, List<Participant> participants);
-
-    void sendCancelSignalling(Session session);
-
     int getActiveConnectionCount();
 
     int getOnlineUserCount();
+
+    void handleCancel(WSCancel data, Channel channel);
+
+    void handleJoin(WSJoin data, Channel channel);
+
+    void addSession(Session session, Long callerId);
+
+    void endSession(Long sessionId, Long managerId);
 }

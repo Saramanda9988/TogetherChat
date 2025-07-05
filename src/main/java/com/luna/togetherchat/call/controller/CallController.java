@@ -2,6 +2,7 @@ package com.luna.togetherchat.call.controller;
 
 import com.luna.togetherchat.call.domain.entity.Session;
 import com.luna.togetherchat.call.domain.request.*;
+import com.luna.togetherchat.call.domain.response.SessionInfoResponse;
 import com.luna.togetherchat.call.domain.response.SessionResponse;
 import com.luna.togetherchat.call.service.CallService;
 import com.luna.togetherchat.common.domain.vo.response.ApiResult;
@@ -25,15 +26,14 @@ public class CallController {
     private final CallService callService;
 
     @PostMapping("/initiate")
-    @Operation(summary = "发起通话(备用)", description = "发起语音或视频通话")
-    public ApiResult<Void> initiateCall(@RequestBody @Valid CallingRequest request) {
+    @Operation(summary = "发起通话", description = "发起语音或视频通话")
+    public ApiResult<SessionInfoResponse> initiateCall(@RequestBody @Valid CallingRequest request) {
         Long userId = RequestHolder.get().getUserId();
-        callService.initiateCall(request, userId);
-        return ApiResult.success();
+        return ApiResult.success(callService.initiateCall(request, userId));
     }
 
     @PostMapping("/cancel")
-    @Operation(summary = "结束通话(备用)", description = "挂断正在进行的通话")
+    @Operation(summary = "结束通话", description = "挂断正在进行的通话")
     public ApiResult<Void> endCall(@RequestBody @Valid CallingCancelRequest request) {
         Long userId = RequestHolder.get().getUserId();
         callService.endCall(request, userId);

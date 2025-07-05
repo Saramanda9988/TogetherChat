@@ -1,5 +1,6 @@
 package com.luna.togetherchat.user.controller;
 
+import com.luna.togetherchat.common.annotation.PublicAPI;
 import com.luna.togetherchat.common.constant.Const;
 import com.luna.togetherchat.common.domain.vo.response.ApiResult;
 import com.luna.togetherchat.common.utils.RequestHolder;
@@ -24,18 +25,20 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    @PublicAPI
     @GetMapping("info/me")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public ApiResult<UserInfoResponse> getUserInfo() {
         return ApiResult.success(userService.getUserInfo(RequestHolder.get().getUserId()));
     }
-
+    @PublicAPI
     @GetMapping("info/{id}")
     @Operation(summary = "获取指定用户信息", description = "获取指定用户信息")
     public ApiResult<UserInfoResponse> getUserInfo(@PathVariable Long id) {
         return ApiResult.success(userService.getUserInfo(id));
     }
 
+    @PublicAPI
     @GetMapping("logout")
     @Operation(summary = "退出登录", description = "退出登录")
     public ApiResult<Void> logout(@CookieValue(value = Const.REFRESH_TOKEN_COOKIE_NAME) String refreshToken) {
@@ -43,6 +46,7 @@ public class UserController {
         return ApiResult.success();
     }
 
+    @PublicAPI
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "用户登录接口 注意：后端返回的 token 不携带Bearer前缀")
     public ApiResult<LoginInfoResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest,
@@ -67,6 +71,7 @@ public class UserController {
         return ApiResult.success(userService.refreshToken(refreshToken, response));
     }
 
+    @PublicAPI
     @PostMapping("/register")
     @Operation(summary = "用户注册", description = "用户注册接口")
     public ApiResult<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest) {

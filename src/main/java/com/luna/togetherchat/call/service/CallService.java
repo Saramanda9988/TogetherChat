@@ -2,6 +2,7 @@ package com.luna.togetherchat.call.service;
 
 import com.luna.togetherchat.call.domain.entity.Session;
 import com.luna.togetherchat.call.domain.request.*;
+import com.luna.togetherchat.call.domain.response.SessionInfoResponse;
 import com.luna.togetherchat.call.domain.response.SessionResponse;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface CallService {
      * @param callerId 发起者ID
      * @return 通话会话信息
      */
-    void initiateCall(CallingRequest request, Long callerId);
+    SessionInfoResponse initiateCall(CallingRequest request, Long callerId);
 
     /**
      * 结束通话

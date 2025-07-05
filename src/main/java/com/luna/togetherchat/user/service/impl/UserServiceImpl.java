@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 检查密码是否正确
-        if (!BCrypt.checkpw(userLoginRequest.getPassword(), user.getPassword())) {
+        if (!Objects.equals(userLoginRequest.getPassword(), user.getPassword())) {
             throw new BusinessException(UserErrorEnum.LOGIN_PASSWORD_ERROR);
         }
 

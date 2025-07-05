@@ -7,6 +7,7 @@ import com.luna.togetherchat.call.domain.entity.Participant;
 import com.luna.togetherchat.call.domain.entity.Session;
 import com.luna.togetherchat.call.domain.request.CallingCancelRequest;
 import com.luna.togetherchat.call.domain.request.CallingRequest;
+import com.luna.togetherchat.call.domain.response.SessionInfoResponse;
 import com.luna.togetherchat.call.domain.response.SessionResponse;
 import com.luna.togetherchat.call.enums.SessionErrorEnum;
 import com.luna.togetherchat.call.enums.SessionStatusEnum;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -40,7 +42,7 @@ public class CallServiceImpl implements CallService {
 
     @Override
     @Transactional
-    public void initiateCall(CallingRequest request, Long callerId) {
+    public SessionInfoResponse initiateCall(CallingRequest request, Long callerId) {
         // 获取分布式锁，确保同一用户只能有一个端发起会话
         DistributedLockUtils.LockInfo lockInfo = distributedLockUtils.tryLockCallSession(0L, callerId);
         if (!lockInfo.isLocked()) {
@@ -78,8 +80,12 @@ public class CallServiceImpl implements CallService {
                 throw new BusinessException(SessionErrorEnum.NO_VALID_USER);
             }
             participantDao.saveBatch(participants);
-
-            webSocketService.sendJoinSignalling(session, participants);
+            webSocketService.addSession(session, callerId);
+            return SessionInfoResponse
+                    .builder()
+                    .sessionId(session.getSessionId())
+                    .key(UUID.randomUUID().toString().replace("-", "").substring(0, 8))
+                    .build();
         } finally {
             distributedLockUtils.releaseLock(lockInfo);
         }
@@ -99,8 +105,7 @@ public class CallServiceImpl implements CallService {
             Session session = sessionDao.getById(request.getSessionId());
             session.setEndTime(LocalDateTime.now());
             sessionDao.updateById(session);
-
-            webSocketService.sendCancelSignalling(session);
+            webSocketService.endSession(session.getSessionId(), receiverId);
         } finally {
             // 释放锁
             distributedLockUtils.releaseLock(lockInfo);

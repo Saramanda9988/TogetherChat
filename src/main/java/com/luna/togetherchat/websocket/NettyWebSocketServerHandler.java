@@ -29,12 +29,14 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         this.webSocketService = SpringUtil.getBean(WebSocketService.class);
+        log.info("客户端连接成功，channelId = {}", ctx.channel().id());
     }
 
     // 客户端离线
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         userOffLine(ctx);
+        log.info("客户端断开连接，channelId = {}", ctx.channel().id());
     }
 
     /**
@@ -129,6 +131,14 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             case REJECT:
                 String rejectData = wsBaseReq.getData();
                 webSocketService.handleReject(JSONUtil.toBean(rejectData, WSReject.class), ctx.channel());
+                break;
+            case CANCEL:
+                String cancelData = wsBaseReq.getData();
+                webSocketService.handleCancel(JSONUtil.toBean(cancelData, WSCancel.class), ctx.channel());
+                break;
+            case JOIN:
+                String joinData = wsBaseReq.getData();
+                webSocketService.handleJoin(JSONUtil.toBean(joinData, WSJoin.class), ctx.channel());
                 break;
             default:
                 log.info("未知类型");
