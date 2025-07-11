@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: togetherchat-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: togetherchat123
+      MYSQL_DATABASE: togetherchat
+      MYSQL_USER: togetherchat
+      MYSQL_PASSWORD: togetherchat123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - togetherchat-network
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    container_name: togetherchat-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - togetherchat-network
+
+  # RabbitMQ消息队列
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: togetherchat-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: togetherchat
+      RABBITMQ_DEFAULT_PASS: togetherchat123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - togetherchat-network
+
+  # 用户服务
+  user-server:
+    build:
+      context: ./user-server
+      dockerfile: Dockerfile
+    container_name: togetherchat-user-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+    networks:
+      - togetherchat-network
+
+  # 聊天服务
+  chat-server:
+    build:
+      context: ./chat-server
+      dockerfile: Dockerfile
+    container_name: togetherchat-chat-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "8082:8082"
+      - "8090:8090"  # WebSocket端口
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+      - user-server
+    networks:
+      - togetherchat-network
+
+  # AI服务
+  ai-server:
+    build:
+      context: ./ai-server
+      dockerfile: Dockerfile
+    container_name: togetherchat-ai-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+    networks:
+      - togetherchat-network
+
+  # WebRTC服务
+  webrtc-server:
+    build:
+      context: ./webrtc-server
+      dockerfile: Dockerfile
+    container_name: togetherchat-webrtc-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+      - user-server
+    networks:
+      - togetherchat-network
+
+  # API网关
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: togetherchat-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-server
+      - chat-server
+      - ai-server
+      - webrtc-server
+    networks:
+      - togetherchat-network
+
+volumes:
+  mysql_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  togetherchat-network:
+    driver: bridge
