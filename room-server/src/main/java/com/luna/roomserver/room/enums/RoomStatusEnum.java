@@ -1,0 +1,36 @@
+package com.luna.roomserver.room.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * Description: 房间状态枚举
+ */
+@AllArgsConstructor
+@Getter
+public enum RoomStatusEnum {
+    ACTIVE(0, "正常"),
+    DELETED(1, "删除"),
+    GROUP(3, "群组"),
+    CHAT(4, "单聊"),
+    CREATE(5, "创建"),
+    ;
+
+    private final Integer type;
+    private final String desc;
+
+    private static final Map<Integer, MemberTypeEnum> cache;
+
+    static {
+        cache = Arrays.stream(MemberTypeEnum.values()).collect(Collectors.toMap(MemberTypeEnum::getType, Function.identity()));
+    }
+
+    public static MemberTypeEnum of(Integer type) {
+        return cache.get(type);
+    }
+}

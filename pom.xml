@@ -18,10 +18,9 @@
     
     <!-- Microservice modules -->
     <modules>
-        <module>gateway</module>
+        <module>gateway-server</module>
         <module>user-server</module>
         <module>chat-server</module>
-        <module>ai-server</module>
         <module>webrtc-server</module>
     </modules>
     <!--    <description>TogetherChat</description>-->

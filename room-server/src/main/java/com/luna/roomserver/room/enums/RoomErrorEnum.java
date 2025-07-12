@@ -1,0 +1,41 @@
+package com.luna.roomserver.room.enums;
+
+import com.luna.roomserver.common.enums.ErrorEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * @Author Kkuil
+ * @Date 2023/10/24 15:50
+ * @Description 群异常码
+ */
+@AllArgsConstructor
+@Getter
+public enum RoomErrorEnum implements ErrorEnum {
+    /**
+     *
+     */
+    GROUP_NOT_EXIST(9001, "该群不存在~"),
+    NOT_ALLOWED_OPERATION(9002, "您无权操作~"),
+    MANAGE_COUNT_EXCEED(9003, "群管理员数量达到上限，请先删除后再操作~"),
+    USER_NOT_IN_GROUP(9004, "非法操作，用户不存在群聊中~"),
+    NOT_ALLOWED_FOR_REMOVE(9005, "非法操作，你没有移除该成员的权限"),
+    NOT_ALLOWED_FOR_EXIT_GROUP(9006, "非法操作，不允许退出大群聊"),
+    GROUP_OWNER_TRANSFER_FAILED(9007, "群主转让失败"),
+    GROUP_OWNER_EXIT_FAILED(9008,"群主唯一，不能退出群聊，请申请转让或解散"),
+    MEMBER_NOT_EXIST(9009, "该成员不在群组中"),
+    NOT_IN_GROUP(9010, "您不在该群组中")
+    ;
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getErrorCode() {
+        return this.code;
+    }
+
+    @Override
+    public String getErrorMsg() {
+        return this.msg;
+    }
+}
