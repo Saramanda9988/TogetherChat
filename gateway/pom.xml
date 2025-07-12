@@ -12,7 +12,7 @@
     <groupId>com.luna</groupId>
     <artifactId>gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Gateway</name>
+    <name>gateway</name>
     <description>API Gateway for microservices</description>
     
     <properties>
@@ -96,13 +96,6 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-spring-boot3</artifactId>
             <version>2.2.0</version>
-        </dependency>
-        
-        <!-- Common module -->
-        <dependency>
-            <groupId>com.luna</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         
         <!-- Spring Dev Tools -->

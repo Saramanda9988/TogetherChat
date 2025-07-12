@@ -12,8 +12,8 @@
     <groupId>com.luna</groupId>
     <artifactId>user-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>User-server</name>
-    <description>User-server</description>
+    <name>user-server</name>
+    <description>user-server</description>
     <url/>
     <licenses>
         <license/>
@@ -211,13 +211,6 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>4.0.3</version>
-        </dependency>
-        
-        <!-- Common module -->
-        <dependency>
-            <groupId>com.luna</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         
         <!-- Spring Dev Tools -->

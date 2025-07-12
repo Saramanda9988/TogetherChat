@@ -18,7 +18,6 @@
     
     <!-- Microservice modules -->
     <modules>
-        <module>common</module>
         <module>gateway</module>
         <module>user-server</module>
         <module>chat-server</module>
