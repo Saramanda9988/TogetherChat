@@ -1,0 +1,4 @@
+此nacos使用脚本同时启动，startup.cmd经过修改，变为前台启动脚本
+如果需要后台启动，请使用startup.sh脚本或修改startup.cmd脚本
+
+如果需要使用，最好重新下载安装最新的nacos版本
