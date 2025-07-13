@@ -30,9 +30,9 @@ public class TokenInterceptor implements GlobalFilter {
 
     // 需要排除的公共路径
     private static final String[] EXCLUDED_PATHS = {
-        "/auth/login",
-        "/auth/register",
-        "/auth/refresh",
+        "/capi/auth/login",
+        "/capi/auth/register",
+        "/capi/auth/refresh",
         "/health",
         "/actuator"
     };
