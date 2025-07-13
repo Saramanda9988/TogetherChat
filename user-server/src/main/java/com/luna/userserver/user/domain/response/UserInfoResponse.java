@@ -21,12 +21,6 @@ public class UserInfoResponse {
     @Schema(description = "用户名")
     private String username;
 
-    @Schema(description = "头像的url")
-    private String avatar;
-
-    @Schema(description = "1在线 2离线")
-    private Byte activeStatus;
-
-    @Schema(description = "最后一次上下线时间")
-    private LocalDateTime lastLoginTime;
+    @Schema(description = "1在线 0离线")
+    private Integer activeStatus;
 }

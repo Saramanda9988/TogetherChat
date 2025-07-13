@@ -105,7 +105,14 @@
                 <artifactId>spring-cloud-starter-loadbalancer</artifactId>
                 <version>4.1.4</version>
             </dependency>
-            
+
+            <!-- OpenFeign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>4.3.0</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>

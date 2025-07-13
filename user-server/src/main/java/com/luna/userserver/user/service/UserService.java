@@ -1,12 +1,9 @@
 package com.luna.userserver.user.service;
 
+import com.luna.common.domain.vo.request.CreateUserRequest;
+import com.luna.common.domain.dto.UserDTO;
 import com.luna.userserver.user.domain.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.luna.userserver.user.domain.request.UserLoginRequest;
-import com.luna.userserver.user.domain.request.UserRegisterRequest;
-import com.luna.userserver.user.domain.response.LoginInfoResponse;
 import com.luna.userserver.user.domain.response.UserInfoResponse;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -20,11 +17,11 @@ public interface UserService {
 
     UserInfoResponse getUserInfo(Long userId);
 
-    void logout(String refreshToken);
+    void updateUserInfo(UserInfoResponse userInfoResponse);
 
-    LoginInfoResponse login(UserLoginRequest userLoginRequest, HttpServletResponse response);
+    User getUserById(String userId);
 
-    String refreshToken(String refreshToken, HttpServletResponse response);
+    void updateLastLoginTime(Long userId);
 
-    void register(UserRegisterRequest registerRequest);
+    UserDTO createUser(CreateUserRequest request);
 }

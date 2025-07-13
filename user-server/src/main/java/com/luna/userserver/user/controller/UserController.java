@@ -1,9 +1,9 @@
 package com.luna.userserver.user.controller;
 
-import com.luna.userserver.common.annotation.PublicAPI;
-import com.luna.userserver.common.constant.Const;
-import com.luna.userserver.common.domain.vo.response.ApiResult;
-import com.luna.userserver.common.utils.RequestHolder;
+import com.luna.common.constant.Const;
+import com.luna.common.domain.vo.response.ApiResult;
+import com.luna.common.utils.RequestHolder;
+import com.luna.userserver.user.domain.entity.User;
 import com.luna.userserver.user.domain.request.UserLoginRequest;
 import com.luna.userserver.user.domain.request.UserRegisterRequest;
 import com.luna.userserver.user.domain.response.LoginInfoResponse;
@@ -18,64 +18,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/capi/user")
+@RequestMapping("/user")
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "UserController", description = "用户接口")
 public class UserController {
     private final UserService userService;
 
-    @PublicAPI
     @GetMapping("info/me")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public ApiResult<UserInfoResponse> getUserInfo() {
         return ApiResult.success(userService.getUserInfo(RequestHolder.get().getUserId()));
     }
-    @PublicAPI
+
     @GetMapping("info/{id}")
     @Operation(summary = "获取指定用户信息", description = "获取指定用户信息")
     public ApiResult<UserInfoResponse> getUserInfo(@PathVariable Long id) {
         return ApiResult.success(userService.getUserInfo(id));
     }
 
-    @PublicAPI
-    @GetMapping("logout")
-    @Operation(summary = "退出登录", description = "退出登录")
-    public ApiResult<Void> logout(@CookieValue(value = Const.REFRESH_TOKEN_COOKIE_NAME) String refreshToken) {
-        userService.logout(refreshToken);
-        return ApiResult.success();
-    }
-
-    @PublicAPI
-    @PostMapping("/login")
-    @Operation(summary = "用户登录", description = "用户登录接口 注意：后端返回的 token 不携带Bearer前缀")
-    public ApiResult<LoginInfoResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest,
-                                              HttpServletResponse response) {
-        return ApiResult.success(userService.login(userLoginRequest, response));
-    }
-
-    /**
-     * "@CookieValue"注解会自动从请求的Cookie中提取refresh_token的值
-     * Spring MVC会自动创建HttpServletResponse对象并注入到方法参数中
-     * 这是Spring框架的依赖注入特性，对前端完全透明
-     * 浏览器会自动发送相关Cookie
-     * 服务器设置的新Cookie会自动被浏览器保存
-     * @param refreshToken
-     * @param response
-     * @return
-     */
-    @PostMapping("/refresh")
-    @Operation(summary = "刷新token", description = "刷新token接口 注意：后端返回的 token 不携带Bearer前缀")
-    public ApiResult<String> refreshToken(@CookieValue(value = Const.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
-                                          HttpServletResponse response) {
-        return ApiResult.success(userService.refreshToken(refreshToken, response));
-    }
-
-    @PublicAPI
-    @PostMapping("/register")
-    @Operation(summary = "用户注册", description = "用户注册接口")
-    public ApiResult<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest) {
-        userService.register(registerRequest);
+    @PutMapping("/info")
+    @Operation(summary = "修改用户信息")
+    public ApiResult<UserInfoResponse> updateUserInfo(@RequestBody UserInfoResponse userInfoResponse) {
+        userService.updateUserInfo(userInfoResponse);
         return ApiResult.success();
     }
 }

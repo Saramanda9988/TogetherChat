@@ -6,6 +6,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -24,7 +25,8 @@ public class TokenInterceptor implements GlobalFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_SCHEMA = "Bearer ";
-    public static final String ATTRIBUTE_UID = "uid";
+    // 网关传入的用户ID请求头，网关在验证token后设置
+    public static final String HEADER_USER_ID = "X-User-Id";
 
     // 需要排除的公共路径
     private static final String[] EXCLUDED_PATHS = {
@@ -52,7 +54,9 @@ public class TokenInterceptor implements GlobalFilter {
                 .filter(h -> h.startsWith(AUTHORIZATION_SCHEMA))
                 .map(h -> h.substring(AUTHORIZATION_SCHEMA.length()))
                 .orElse(null);
+
         Long validUid = null;
+
         try {
             validUid = Long.parseLong(Objects.requireNonNull(token));
         } catch (Exception e) {
@@ -60,8 +64,11 @@ public class TokenInterceptor implements GlobalFilter {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return Mono.empty();
         }
-        exchange.getAttributes().put(ATTRIBUTE_UID, validUid);
-        // 继续执行过滤器链，并在请求完成后清理ThreadLocal
-        return chain.filter(exchange);
+
+        ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                .header(HEADER_USER_ID, String.valueOf(validUid))
+                .build();
+        // 继续执行过滤器链
+        return chain.filter(exchange.mutate().request(modifiedRequest).build());
     }
 }

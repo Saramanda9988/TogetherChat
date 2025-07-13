@@ -40,3 +40,6 @@ build/
 
 ### Resources ###
 src/resources/
+
+### Nacos Server ###
+nacos-server/

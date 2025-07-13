@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.luna.userserver.user.domain.response.UserInfoResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,4 +72,8 @@ public class User implements Serializable {
     @Schema(description = "最后更新时间")
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    public User(UserInfoResponse userInfoResponse) {
+        this.username = userInfoResponse.getUsername();
+    }
 }

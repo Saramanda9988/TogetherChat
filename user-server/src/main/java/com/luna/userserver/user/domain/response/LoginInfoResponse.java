@@ -18,16 +18,4 @@ public class LoginInfoResponse {
 
     @Schema(description = "用户名")
     private String username;
-
-    @Schema(description = "用户头像")
-    private String avatar;
-
-    @Schema(description = "1在线 2离线")
-    private Integer activeStatus;
-
-    @Schema(description = "最后一次上下线时间")
-    private LocalDateTime lastLoginTime;
-
-    @Schema(description = "access_token 注意：后端返回的 token 不携带Bearer前缀")
-    private String accessToken;
 }
