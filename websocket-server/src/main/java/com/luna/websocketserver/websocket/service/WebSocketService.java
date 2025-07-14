@@ -1,7 +1,6 @@
 package com.luna.websocketserver.websocket.service;
 
 
-import com.luna.chatserver.chat.domain.request.message.ChatMessageRequest;
 import com.luna.websocketserver.websocket.domain.vo.WSBaseResp;
 import io.netty.channel.Channel;
 
@@ -36,7 +35,7 @@ public interface WebSocketService {
 
     void authorize(Channel channel, String token);
 
-    void sendMessage(ChatMessageRequest bean, Channel channel);
+//    void sendMessage(ChatMessageRequest bean, Channel channel);
     /**
      * 处理ws断开连接的事件
      *

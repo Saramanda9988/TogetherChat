@@ -3,12 +3,10 @@ package com.luna.websocketserver.websocket.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import com.luna.chatserver.chat.domain.request.message.ChatMessageRequest;
-import com.luna.chatserver.chat.service.ChatService;
-import com.luna.chatserver.common.config.ThreadPoolConfig;
-import com.luna.chatserver.common.domain.dto.RequestInfo;
-import com.luna.chatserver.common.utils.JwtUtils;
-import com.luna.chatserver.common.utils.RequestHolder;
+import com.luna.common.config.ThreadPoolConfig;
+import com.luna.common.domain.dto.RequestInfo;
+import com.luna.common.utils.JwtUtils;
+import com.luna.common.utils.RequestHolder;
 import com.luna.websocketserver.websocket.domain.dto.WSChannelExtraDTO;
 import com.luna.websocketserver.websocket.domain.vo.WSBaseResp;
 import com.luna.websocketserver.websocket.enums.WSReqTypeEnum;
@@ -158,15 +156,15 @@ public class WebSocketServiceImpl implements WebSocketService {
         channel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(wsBaseResp)));
     }
 
-    @Override
-    public void sendMessage(ChatMessageRequest request, Channel channel) {
-        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
-        RequestInfo info = new RequestInfo();
-        info.setUserId(wsChannelExtraDTO.getUid());
-        RequestHolder.set(info);
-
-//        chatService.sendMessage(request, wsChannelExtraDTO.getUid());
-    }
+//    @Override
+//    public void sendMessage(ChatMessageRequest request, Channel channel) {
+//        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
+//        RequestInfo info = new RequestInfo();
+//        info.setUserId(wsChannelExtraDTO.getUid());
+//        RequestHolder.set(info);
+//
+////        chatService.sendMessage(request, wsChannelExtraDTO.getUid());
+//    }
 
     @Override
         public void handleHeartBeat(Channel channel) {

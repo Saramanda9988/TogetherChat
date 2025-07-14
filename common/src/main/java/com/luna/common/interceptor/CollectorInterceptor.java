@@ -12,6 +12,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Optional;
 
+import static com.luna.common.filter.UserContextFilter.ATTRIBUTE_UID;
+
 /**
  * 信息收集的拦截器
  */
@@ -19,8 +21,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class CollectorInterceptor implements HandlerInterceptor {
-
-    private static final String ATTRIBUTE_UID = "uid";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

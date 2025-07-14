@@ -21,14 +21,17 @@ import io.netty.util.NettyRuntime;
 import io.netty.util.concurrent.Future;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
 public class NettyWebSocketServer {
 
-    public static final int WEB_SOCKET_PORT = 8100;
+    @Value("${netty.server.port}")
+    public static int WEB_SOCKET_PORT;
     public static final NettyWebSocketServerHandler NETTY_WEB_SOCKET_SERVER_HANDLER = new NettyWebSocketServerHandler();
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);

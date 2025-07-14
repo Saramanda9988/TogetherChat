@@ -104,7 +104,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
                 break;
             case MESSAGE:
                 String data = wsBaseReq.getData();
-                webSocketService.sendMessage(JSONUtil.toBean(data, ChatMessageRequest.class), ctx.channel());
+//                webSocketService.sendMessage(JSONUtil.toBean(data, ChatMessageRequest.class), ctx.channel());
                 break;
             default:
                 log.info("未知类型");
