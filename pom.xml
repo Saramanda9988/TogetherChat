@@ -24,6 +24,7 @@
         <module>webrtc-server</module>
         <module>room-server</module>
         <module>auth-server</module>
+        <module>websocket-server</module>
     </modules>
     <!--    <description>TogetherChat</description>-->
     <url/>
@@ -47,6 +48,7 @@
         <spring-cloud.version>2023.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
         <nacos.version>2.4.4</nacos.version>
+        <dubbo.version>3.3.3</dubbo.version>
     </properties>
 
     <profiles>
@@ -113,6 +115,13 @@
                 <version>4.3.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
