@@ -11,6 +11,7 @@ import com.luna.websocketserver.websocket.domain.dto.WSChannelExtraDTO;
 import com.luna.websocketserver.websocket.domain.vo.WSBaseResp;
 import com.luna.websocketserver.websocket.enums.WSReqTypeEnum;
 import com.luna.websocketserver.websocket.util.NettyUtil;
+import com.luna.websocketserver.websocket.util.WebSocketRedisUtil;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,9 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Autowired
     @Qualifier(ThreadPoolConfig.WS_EXECUTOR)
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    
+    @Autowired
+    private WebSocketRedisUtil webSocketRedisUtil;
 
     /*==========================websocket连接==========================*/
     // 处理所有ws连接的事件
@@ -88,6 +92,11 @@ public class WebSocketServiceImpl implements WebSocketService {
         ONLINE_UID_MAP.putIfAbsent(uid, new CopyOnWriteArrayList<>());
         ONLINE_UID_MAP.get(uid).add(channel);
         NettyUtil.setAttr(channel, NettyUtil.UID, uid);
+        
+        // 在Redis中存储用户在线状态和服务地址映射
+        if (uid != null) {
+            webSocketRedisUtil.userOnline(uid);
+        }
     }
 
     // 如果在线列表不存在，就先把该channel放进在线列表
@@ -102,11 +111,21 @@ public class WebSocketServiceImpl implements WebSocketService {
     private boolean offline(Channel channel, Optional<Long> uidOptional) {
         ONLINE_WS_MAP.remove(channel);
         if (uidOptional.isPresent()) {
-            CopyOnWriteArrayList<Channel> channels = ONLINE_UID_MAP.get(uidOptional.get());
+            Long uid = uidOptional.get();
+            CopyOnWriteArrayList<Channel> channels = ONLINE_UID_MAP.get(uid);
             if (CollectionUtil.isNotEmpty(channels)) {
                 channels.removeIf(ch -> Objects.equals(ch, channel));
             }
-            return CollectionUtil.isEmpty(ONLINE_UID_MAP.get(uidOptional.get()));
+            
+            // 判断用户是否完全下线（所有连接都断开）
+            boolean isCompletelyOffline = CollectionUtil.isEmpty(ONLINE_UID_MAP.get(uid));
+            
+            // 如果用户完全下线，从Redis中删除映射关系
+            if (isCompletelyOffline) {
+                webSocketRedisUtil.userOffline(uid);
+            }
+            
+            return isCompletelyOffline;
         }
         return true;
     }

@@ -3,6 +3,7 @@ package com.luna.websocketserver.websocket.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
+import com.luna.common.utils.RedisUtils;
 import com.luna.websocketserver.websocket.domain.vo.WSBaseReq;
 import com.luna.websocketserver.websocket.enums.WSReqTypeEnum;
 import com.luna.websocketserver.websocket.service.WebSocketService;
@@ -15,6 +16,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 
 @Slf4j
@@ -23,11 +25,19 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
 
     private WebSocketService webSocketService;
 
+    private final String redisPreKey = "websocket:online";
+
+    @Value("${websocket.server.port}")
+    private String WEB_SOCKET_PORT;
+
+    private final String WEB_SOCKET_URL = "localhost:" + WEB_SOCKET_PORT;
+
     // 当web客户端连接后，触发该方法
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         this.webSocketService = SpringUtil.getBean(WebSocketService.class);
         log.info("客户端连接成功，channelId = {}", ctx.channel().id());
+
     }
 
     // 客户端离线

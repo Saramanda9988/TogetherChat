@@ -1,16 +1,20 @@
-package com.luna.chatserver.chat.event.consumer;
+package com.luna.websocketserver.websocket.consumer;
 
 
-import com.luna.chatserver.common.constant.MQConstant;
-import com.luna.chatserver.websocket.domain.dto.PushMessageDTO;
-import com.luna.chatserver.websocket.domain.enums.WSPushTypeEnum;
-import com.luna.chatserver.websocket.service.WebSocketService;
+import com.luna.common.constant.MQConstant;
+import com.luna.websocketserver.websocket.domain.dto.PushMessageDTO;
+import com.luna.websocketserver.websocket.enums.WSPushTypeEnum;
+import com.luna.websocketserver.websocket.service.WebSocketService;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -31,9 +35,19 @@ public class PushConsumer {
      )
     public void onMessage(PushMessageDTO message) {
         WSPushTypeEnum wsPushTypeEnum = WSPushTypeEnum.of(message.getPushType());
+        List<Long> onlineUserIds = webSocketService.getOnlineUserId();
+
+        if (message.getUidList() == null || message.getUidList().isEmpty()) {
+            return;
+        }
+
+        List<Long> uidList = message.getUidList()
+                .stream()
+                .filter(onlineUserIds::contains)
+                .toList();
         switch (wsPushTypeEnum) {
             case USER:
-                message.getUidList().forEach(uid -> {
+                uidList.forEach(uid -> {
                     webSocketService.sendToUid(message.getWsBaseMsg(), uid);
                 });
                 break;
