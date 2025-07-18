@@ -2,9 +2,12 @@ package com.luna.roomserver.room.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.roomserver.common.enums.CommonErrorEnum;
-import com.luna.roomserver.common.exception.BusinessException;
+import com.luna.common.domain.vo.chat.WSRoomDissolve;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.domain.vo.response.WSBaseResp;
+import com.luna.common.enums.CommonErrorEnum;
+import com.luna.common.enums.WSRespTypeEnum;
+import com.luna.common.exception.BusinessException;
 import com.luna.roomserver.room.dao.RoomDao;
 import com.luna.roomserver.room.dao.RoomMemberDao;
 import com.luna.roomserver.room.domain.entity.Room;
@@ -16,13 +19,10 @@ import com.luna.roomserver.room.domain.response.RoomResponse;
 import com.luna.roomserver.room.enums.RoomErrorEnum;
 import com.luna.roomserver.room.enums.MemberTypeEnum;
 import com.luna.roomserver.room.enums.RoomStatusEnum;
+import com.luna.roomserver.room.event.PushService;
 import com.luna.roomserver.room.service.RoomService;
-import com.luna.roomserver.websocket.domain.enums.WSRespTypeEnum;
-import com.luna.roomserver.websocket.domain.vo.WSBaseResp;
-import com.luna.roomserver.websocket.domain.vo.chat.WSRoomDissolve;
-import com.luna.roomserver.websocket.service.PushService;
-import com.luna.roomserver.websocket.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +42,11 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@DubboService
 public class RoomServiceImpl implements RoomService {
 
     private final RoomDao roomDao;
     private final RoomMemberDao roomMemberDao;
-    private final WebSocketService webSocketService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final PushService pushService;
 

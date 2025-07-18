@@ -3,9 +3,9 @@ package com.luna.websocketserver.websocket.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.luna.common.utils.RedisUtils;
-import com.luna.websocketserver.websocket.domain.vo.WSBaseReq;
-import com.luna.websocketserver.websocket.enums.WSReqTypeEnum;
+import com.luna.common.domain.vo.request.WSBaseReq;
+import com.luna.common.domain.vo.signalling.*;
+import com.luna.common.enums.WSReqTypeEnum;
 import com.luna.websocketserver.websocket.service.WebSocketService;
 import com.luna.websocketserver.websocket.util.NettyUtil;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -115,6 +115,38 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             case MESSAGE:
                 String data = wsBaseReq.getData();
 //                webSocketService.sendMessage(JSONUtil.toBean(data, ChatMessageRequest.class), ctx.channel());
+                break;
+            case ENTER:
+                String enterData = wsBaseReq.getData();
+                webSocketService.handleEntry(JSONUtil.toBean(enterData, WSEntry.class), ctx.channel());
+                break;
+            case OFFER:
+                String offerData = wsBaseReq.getData();
+                webSocketService.handleOffer(JSONUtil.toBean(offerData, WSOffer.class), ctx.channel());
+                break;
+            case ANSWER:
+                String answerData = wsBaseReq.getData();
+                webSocketService.handleAnswer(JSONUtil.toBean(answerData, WSAnswer.class), ctx.channel());
+                break;
+            case CANDIDATE:
+                String candidateData = wsBaseReq.getData();
+                webSocketService.handleCandidate(JSONUtil.toBean(candidateData, WSCandidate.class), ctx.channel());
+                break;
+            case LEAVE:
+                String leaveData = wsBaseReq.getData();
+                webSocketService.handleLeave(JSONUtil.toBean(leaveData, WSLeave.class), ctx.channel());
+                break;
+            case REJECT:
+                String rejectData = wsBaseReq.getData();
+                webSocketService.handleReject(JSONUtil.toBean(rejectData, WSReject.class), ctx.channel());
+                break;
+            case CANCEL:
+                String cancelData = wsBaseReq.getData();
+                webSocketService.handleCancel(JSONUtil.toBean(cancelData, WSCancel.class), ctx.channel());
+                break;
+            case JOIN:
+                String joinData = wsBaseReq.getData();
+                webSocketService.handleJoin(JSONUtil.toBean(joinData, WSJoin.class), ctx.channel());
                 break;
             default:
                 log.info("未知类型");

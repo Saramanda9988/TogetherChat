@@ -1,7 +1,8 @@
 package com.luna.websocketserver.websocket.service;
 
 
-import com.luna.websocketserver.websocket.domain.vo.WSBaseResp;
+import com.luna.common.domain.vo.response.WSBaseResp;
+import com.luna.common.domain.vo.signalling.*;
 import io.netty.channel.Channel;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public interface WebSocketService {
     void authorize(Channel channel, String token);
 
 //    void sendMessage(ChatMessageRequest bean, Channel channel);
+
     /**
      * 处理ws断开连接的事件
      *
@@ -45,7 +47,27 @@ public interface WebSocketService {
 
     void handleHeartBeat(Channel channel);
 
+    void handleEntry(WSEntry data, Channel channel);
+
+    void handleOffer(WSOffer data, Channel channel);
+
+    void handleAnswer(WSAnswer data, Channel channel);
+
+    void handleCandidate(WSCandidate data, Channel channel);
+
+    void handleLeave(WSLeave data, Channel channel);
+
+    void handleReject(WSReject data, Channel channel);
+
     int getActiveConnectionCount();
 
     int getOnlineUserCount();
+
+    void handleCancel(WSCancel data, Channel channel);
+
+    void handleJoin(WSJoin data, Channel channel);
+
+//    void addSession(Session session, Long callerId);
+//
+//    void endSession(Long sessionId, Long managerId);
 }

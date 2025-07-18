@@ -75,7 +75,9 @@ dubbo:
     name: dubbo
     port: 50052
   registry:
-    address: nacos://localhost:8848?username=nacos&password=nacos
+    address: nacos://localhost:8848
+    username: nacos
+    password: nacos
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件

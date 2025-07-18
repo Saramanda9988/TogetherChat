@@ -1,8 +1,11 @@
 package com.luna.roomserver.room.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.roomserver.common.exception.BusinessException;
+import com.luna.common.domain.vo.chat.WSMemberChange;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.domain.vo.response.WSBaseResp;
+import com.luna.common.enums.WSRespTypeEnum;
+import com.luna.common.exception.BusinessException;
 import com.luna.roomserver.room.dao.RoomDao;
 import com.luna.roomserver.room.dao.RoomMemberDao;
 import com.luna.roomserver.room.domain.entity.Room;
@@ -15,16 +18,10 @@ import com.luna.roomserver.room.domain.response.RoomMemberResponse;
 import com.luna.roomserver.room.enums.RoomErrorEnum;
 import com.luna.roomserver.room.enums.MemberTypeEnum;
 import com.luna.roomserver.room.enums.RoomStatusEnum;
+import com.luna.roomserver.room.event.PushService;
 import com.luna.roomserver.room.service.RoomMemberService;
-import com.luna.roomserver.user.dao.UserDao;
-import com.luna.roomserver.user.domain.entity.User;
-import com.luna.roomserver.user.enums.UserErrorEnum;
-import com.luna.roomserver.websocket.domain.enums.WSRespTypeEnum;
-import com.luna.roomserver.websocket.domain.vo.WSBaseResp;
-import com.luna.roomserver.websocket.domain.vo.chat.WSMemberChange;
-import com.luna.roomserver.websocket.service.PushService;
-import com.luna.roomserver.websocket.service.WebSocketServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,12 +42,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@DubboService
 public class RoomMemberServiceImpl implements RoomMemberService {
+
     private final RoomDao roomDao;
     private final RoomMemberDao roomMemberDao;
-    private final UserDao userDao;
     private final PushService pushService;
-    private final WebSocketServiceImpl webSocketService;
+
 
     /**
      * 添加群组成员
@@ -108,50 +106,6 @@ public class RoomMemberServiceImpl implements RoomMemberService {
 
         // 推送成员变动消息
         sendMemberChangeMessage(request.getGroupId(), newMemberIds, WSMemberChange.CHANGE_TYPE_ADD);
-    }
-
-    /**
-     * 获取群组成员详情
-     *
-     * @param groupId    群组ID
-     * @param userId     用户ID
-     * @param operatorId 操作者用户ID
-     * @return 成员详情
-     */
-    @Override
-    public RoomMemberResponse getMemberDetail(Long groupId, Long userId, Long operatorId) {
-        // 检查群组是否存在
-        Room room = roomDao.getById(groupId);
-        if (room == null || Objects.equals(room.getStatus(), RoomStatusEnum.DELETED.getType())) {
-            throw new BusinessException(RoomErrorEnum.GROUP_NOT_EXIST);
-        }
-
-        // 检查操作者是否在群里
-        RoomMember operator = roomMemberDao.getMemberByGroupIdAndUserId(groupId, operatorId);
-        if (operator == null) {
-            throw new BusinessException(RoomErrorEnum.NOT_IN_GROUP);
-        }
-
-        // 获取成员信息
-        RoomMember member = roomMemberDao.getMemberByGroupIdAndUserId(groupId, userId);
-        if (member == null) {
-            throw new BusinessException(RoomErrorEnum.MEMBER_NOT_EXIST);
-        }
-
-        // 获取用户信息
-        User userInfo = userDao.getById(userId);
-        if (userInfo == null) {
-            throw new BusinessException(UserErrorEnum.USER_NOT_EXIST);
-        }
-
-        // 构建响应
-        return RoomMemberResponse
-                .builder()
-                .groupId(member.getRoomId())
-                .userId(member.getUserId())
-                .nickname(userInfo.getNickname())
-                .role(member.getRole())
-                .build();
     }
 
     /**

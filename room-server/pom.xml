@@ -47,6 +47,12 @@
     </profiles>
     <dependencies>
         <dependency>
+            <groupId>com.luna</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>3.3.3</version>

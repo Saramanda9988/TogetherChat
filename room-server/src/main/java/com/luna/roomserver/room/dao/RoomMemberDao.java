@@ -1,8 +1,8 @@
 package com.luna.roomserver.room.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.roomserver.common.utils.CursorUtils;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.utils.CursorUtils;
 import com.luna.roomserver.room.domain.entity.RoomMember;
 import com.luna.roomserver.room.domain.request.RoomMemberPageRequest;
 import com.luna.roomserver.room.mapper.RoomMemberMapper;

@@ -1,8 +1,8 @@
 package com.luna.roomserver.room.controller;
 
-import com.luna.roomserver.common.domain.vo.response.ApiResult;
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.roomserver.common.utils.RequestHolder;
+import com.luna.common.domain.vo.response.ApiResult;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.utils.RequestHolder;
 import com.luna.roomserver.room.domain.entity.RoomMember;
 import com.luna.roomserver.room.domain.request.RoomMemberAddRequest;
 import com.luna.roomserver.room.domain.request.RoomMemberPageRequest;
@@ -43,18 +43,6 @@ public class RoomMemberController {
         roomMemberService.addRoomMembers(request, userId);
         return ApiResult.success();
     }
-
-//    /**
-//     * 2.查看用户详情（user信息）
-//     */
-//    @GetMapping("/{groupId}/member/{userId}")
-//    @Operation(summary = "获取群组成员详情")
-//    public ApiResult<GroupMemberResponse> getMemberDetail(
-//            @PathVariable Long groupId,
-//            @PathVariable Long userId) {
-//        Long operatorId = RequestHolder.get().getUserId();
-//        return ApiResult.success(groupMemberService.getMemberDetail(groupId, userId, operatorId));
-//    }
 
     /**
      * 3.翻页查看所有群员

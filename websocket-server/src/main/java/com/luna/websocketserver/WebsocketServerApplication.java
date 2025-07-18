@@ -1,5 +1,7 @@
 package com.luna.websocketserver;
 
+import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
         "com.luna.common",     // 扫描公共模块
         "com.luna.websocketserver"  // 扫描用户服务模块
 })
+@EnableDubbo
+@DubboComponentScan
 public class WebsocketServerApplication {
 
     public static void main(String[] args) {

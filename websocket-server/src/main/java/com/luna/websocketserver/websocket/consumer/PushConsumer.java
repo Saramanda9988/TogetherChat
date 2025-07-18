@@ -2,8 +2,8 @@ package com.luna.websocketserver.websocket.consumer;
 
 
 import com.luna.common.constant.MQConstant;
-import com.luna.websocketserver.websocket.domain.dto.PushMessageDTO;
-import com.luna.websocketserver.websocket.enums.WSPushTypeEnum;
+import com.luna.common.domain.dto.PushMessageDTO;
+import com.luna.common.enums.WSPushTypeEnum;
 import com.luna.websocketserver.websocket.service.WebSocketService;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Description:

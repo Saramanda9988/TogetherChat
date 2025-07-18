@@ -2,8 +2,8 @@ package com.luna.chatserver.chat.cache;
 
 import com.luna.chatserver.chat.dao.MessageDao;
 import com.luna.chatserver.chat.domain.entity.Message;
-import com.luna.chatserver.common.cache.doubleCache.CacheMethod;
-import com.luna.chatserver.common.cache.doubleCache.DoubleCache;
+import com.luna.common.cache.doubleCache.CacheMethod;
+import com.luna.common.cache.doubleCache.DoubleCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

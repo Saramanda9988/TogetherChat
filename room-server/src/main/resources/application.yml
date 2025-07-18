@@ -1,39 +1,57 @@
 server:
   tomcat:
     max-connections: 10000
-  port: 8081 #自定义端口号
+  port: 8083 #自定义端口号
   address: 0.0.0.0
 logging:
   level:
     root: info
 spring:
-  ai:
-    openai:
-      api-key: your-openai-api-key
-    dashscope:
-      api-key: your-dashscope-api-key
   profiles:
     #运行的环境
     active: @spring.profiles.active@
   application:
-    name: chat-server
+    name: ${spring.application.name}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        port: 8083
+      config:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        file-extension: yml
+        refresh-enabled: true
+        import-check:
+          enabled: false
+    loadbalancer:
+      nacos:
+        enabled: true
+      cache:
+        enabled: false
+      retry:
+        enabled: true
+        max-retries-on-same-service-instance: 1
+        max-retries-on-next-service-instance: 1
+        retry-on-all-operations: false
   rabbitmq:
-    host: ${chatserver.rabbitmq.host}
-    port: ${chatserver.rabbitmq.port}
-    username: ${chatserver.rabbitmq.username}
-    password: ${chatserver.rabbitmq.password}
+    host: ${roomserver.rabbitmq.host}
+    port: ${roomserver.rabbitmq.port}
+    username: ${roomserver.rabbitmq.username}
+    password: ${roomserver.rabbitmq.password}
   datasource:
-    url: jdbc:mysql://${chatserver.mysql.ip}:${chatserver.mysql.port}/${chatserver.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: ${chatserver.mysql.username}
-    password: ${chatserver.mysql.password}
+    url: jdbc:mysql://${roomserver.mysql.ip}:${roomserver.mysql.port}/${roomserver.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ${roomserver.mysql.username}
+    password: ${roomserver.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-    # Redis服务器地址
-      host: ${chatserver.redis.host}
-     # Redis服务器端口号
-      port: ${chatserver.redis.port}
-        # 使用的数据库索引，默认是0
+      # Redis服务器地址
+      host: ${roomserver.redis.host}
+      # Redis服务器端口号
+      port: ${roomserver.redis.port}
+      # 使用的数据库索引，默认是0
       database: 0
       # 连接超时时间
       timeout: 1800000
@@ -48,7 +66,17 @@ spring:
           min-idle: 0
           # 连接池中最大连接数，负数表示没有限制
           max-active: 20
-
+dubbo:
+  application:
+    name: room-server-provider
+    logger: slf4j
+  protocol:
+    name: dubbo
+    port: 50053
+  registry:
+    address: nacos://localhost:8848
+    username: nacos
+    password: nacos
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件
@@ -59,9 +87,9 @@ mybatis-plus:
       id-type: auto
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#    logic-delete-field: deleted # 全局逻辑删除的实体字段名
-#    logic-delete-value: 1 # 逻辑已删除值(默认为 1)
-#    logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+    #    logic-delete-field: deleted # 全局逻辑删除的实体字段名
+    #    logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+    #    logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
     map-underscore-to-camel-case: true
     #NONE 取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。 FULL 会自动映射任意复杂的结果集（无论是否嵌套）
     auto-mapping-behavior: FULL

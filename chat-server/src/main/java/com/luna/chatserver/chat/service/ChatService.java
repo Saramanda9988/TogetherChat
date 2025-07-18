@@ -5,7 +5,7 @@ import com.luna.chatserver.chat.domain.request.message.ChatMessageDeleteRequest;
 import com.luna.chatserver.chat.domain.request.message.ChatMessagePageRequest;
 import com.luna.chatserver.chat.domain.request.message.ChatMessageRequest;
 import com.luna.chatserver.chat.domain.request.message.ChatMessageUpdateRequest;
-import com.luna.chatserver.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
 
 public interface ChatService {
 

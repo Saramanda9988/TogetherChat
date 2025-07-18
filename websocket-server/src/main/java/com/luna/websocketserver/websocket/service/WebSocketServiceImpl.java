@@ -5,11 +5,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.luna.common.config.ThreadPoolConfig;
 import com.luna.common.domain.dto.RequestInfo;
+import com.luna.common.domain.vo.signalling.*;
 import com.luna.common.utils.JwtUtils;
 import com.luna.common.utils.RequestHolder;
 import com.luna.websocketserver.websocket.domain.dto.WSChannelExtraDTO;
-import com.luna.websocketserver.websocket.domain.vo.WSBaseResp;
-import com.luna.websocketserver.websocket.enums.WSReqTypeEnum;
+import com.luna.common.domain.vo.response.WSBaseResp;
+import com.luna.common.enums.WSReqTypeEnum;
 import com.luna.websocketserver.websocket.util.NettyUtil;
 import com.luna.websocketserver.websocket.util.WebSocketRedisUtil;
 import io.netty.channel.Channel;
@@ -192,6 +193,151 @@ public class WebSocketServiceImpl implements WebSocketService {
         resp.setType(WSReqTypeEnum.HEARTBEAT.getType());
         resp.setData("pong");
         sendMsg(channel, resp);
+    }
+
+    /*=====================websocket音视频信令发送============================== */
+    @Override
+    public void handleEntry(WSEntry data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[ENTRY]会议不存在：{}", data.getMeetId());
+            return;
+        }
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(data.getMeetId());
+        userList.add(data.getUserId());
+        ONLINE_SESSION_UID_MAP.putIfAbsent(data.getUserId(), data.getMeetId());
+
+        WSBaseResp<WSEntry> resp = new WSBaseResp<>();
+        resp.setType(data.getType());
+        resp.setData(data);
+
+        // 创建新列表，排除当前用户
+        List<Long> targetUsers = userList.stream()
+                .filter(uid -> !Objects.equals(uid, data.getUserId()))
+                .toList();
+        sendToUid(resp, targetUsers);
+    }
+
+    @Override
+    public void handleOffer(WSOffer data, Channel channel) {
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[OFFER]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSOffer> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.OFFER.getType());
+        resp.setData(data);
+        // 发送offer给目标用户
+        sendToUid(resp, targetId);
+    }
+
+    @Override
+    public void handleAnswer(WSAnswer data, Channel channel) {
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[ANSWER]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSAnswer> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.ANSWER.getType());
+        resp.setData(data);
+        // 发送answer给目标用户
+        sendToUid(resp, targetId);
+    }
+
+    @Override
+    public void handleCandidate(WSCandidate data, Channel channel) {
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[CANDIDATE]用户：{}离线", targetId);
+            return;
+        }
+        data.setSourceId(RequestHolder.get().getUserId());
+        WSBaseResp<WSCandidate> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.CANDIDATE.getType());
+        resp.setData(data);
+        // 发送candidate给目标用户
+        sendToUid(resp, targetId);
+    }
+
+    @Override
+    public void handleLeave(WSLeave data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[LEAVE]会议不存在：{}", data.getMeetId());
+            return;
+        }
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(data.getMeetId());
+        userList.remove(ONLINE_WS_MAP.get(channel).getUid());
+        ONLINE_SESSION_UID_MAP.remove(ONLINE_WS_MAP.get(channel).getUid());
+        WSBaseResp<WSLeave> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.LEAVE.getType());
+        resp.setData(data);
+        sendToUid(resp, userList);
+    }
+
+    @Override
+    public void handleReject(WSReject data, Channel channel) {
+        Long targetId = data.getTargetId();
+        if (ONLINE_UID_MAP.get(targetId) == null) {
+            log.info("[REJECT]用户：{}离线", targetId);
+            return;
+        }
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[REJECT]会议不存在：{}", data.getMeetId());
+            return;
+        }
+
+        data.setSourceId(ONLINE_WS_MAP.get(channel).getUid());
+        WSBaseResp<WSReject> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.REJECT.getType());
+        resp.setData(data);
+        // 发送拒绝消息给目标用户
+        sendToUid(resp, data.getTargetId());
+    }
+
+    @Override
+    public void handleJoin(WSJoin data, Channel channel) {
+        if (ONLINE_SESSION_MAP.get(data.getMeetId()) == null) {
+            log.info("[JOIN]会议不存在：{}", data.getMeetId());
+            return;
+        }
+        Long userId = ONLINE_WS_MAP.get(channel).getUid();
+        CopyOnWriteArrayList<Long> userList = new CopyOnWriteArrayList<>();
+        data.setSourceId(userId);
+        WSBaseResp<WSJoin> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.JOIN.getType());
+        resp.setData(data);
+        sendToUid(resp, data.getTargetId());
+    }
+
+//    @Override
+//    public void addSession(Session session, Long callerId) {
+//        CopyOnWriteArrayList<Long> list = new CopyOnWriteArrayList<>();
+//        list.add(callerId);
+//        ONLINE_SESSION_MAP.put(session.getSessionId(), list);
+//        ONLINE_SESSION_UID_MAP.put(callerId, session.getSessionId());
+//        log.info("[ADD_SESSION] 创建会话：{}，发起者：{}", session.getSessionId(), callerId);
+//    }
+//
+//    @Override
+//    public void endSession(Long sessionId, Long managerId) {
+//        log.info("[END_SESSION] 结束会话：{}，管理者：{}", sessionId, managerId);
+//    }
+
+    @Override
+    public void handleCancel(WSCancel data, Channel channel) {
+        data.setSourceId(ONLINE_WS_MAP.get(channel).getUid());
+        WSBaseResp<WSCancel> resp = new WSBaseResp<>();
+        resp.setType(WSReqTypeEnum.CANCEL.getType());
+        resp.setData(data);
+
+        // 发送信令给所有参与者
+        CopyOnWriteArrayList<Long> userList = ONLINE_SESSION_MAP.get(data.getMeetId());
+        if (CollectionUtil.isNotEmpty(userList)) {
+            sendToUid(resp, userList);
+        }
     }
 
     /**

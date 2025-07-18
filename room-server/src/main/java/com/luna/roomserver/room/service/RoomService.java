@@ -1,6 +1,6 @@
 package com.luna.roomserver.room.service;
 
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.roomserver.room.domain.request.RoomCreateRequest;
 import com.luna.roomserver.room.domain.request.RoomPageRequest;
 import com.luna.roomserver.room.domain.request.RoomUpdateRequest;

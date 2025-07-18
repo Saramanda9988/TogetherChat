@@ -2,8 +2,8 @@ package com.luna.roomserver.room.dao;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luna.roomserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.roomserver.common.utils.CursorUtils;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.utils.CursorUtils;
 import com.luna.roomserver.room.domain.entity.Room;
 import com.luna.roomserver.room.domain.request.RoomPageRequest;
 import com.luna.roomserver.room.enums.RoomStatusEnum;

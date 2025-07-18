@@ -2,12 +2,12 @@ package com.luna.chatserver.chat.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luna.chatserver.chat.domain.entity.Message;
 import com.luna.chatserver.chat.domain.request.message.ChatMessagePageRequest;
 import com.luna.chatserver.chat.enums.MessageStatusEnum;
 import com.luna.chatserver.chat.mapper.MessageMapper;
-import com.luna.chatserver.common.domain.vo.response.CursorPageBaseResponse;
-import com.luna.chatserver.common.utils.CursorUtils;
+import com.luna.chatserver.chat.domain.entity.Message;
+import com.luna.common.domain.vo.response.CursorPageBaseResponse;
+import com.luna.common.utils.CursorUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

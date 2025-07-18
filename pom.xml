@@ -21,7 +21,6 @@
         <module>gateway-server</module>
         <module>user-server</module>
         <module>chat-server</module>
-        <module>webrtc-server</module>
         <module>room-server</module>
         <module>auth-server</module>
         <module>websocket-server</module>

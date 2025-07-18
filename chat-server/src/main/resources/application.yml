@@ -7,16 +7,34 @@ logging:
   level:
     root: info
 spring:
-  ai:
-    openai:
-      api-key: your-openai-api-key
-    dashscope:
-      api-key: your-dashscope-api-key
   profiles:
     #运行的环境
     active: @spring.profiles.active@
   application:
-    name: chat-server
+    name: ${spring.application.name}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        port: 8081
+      config:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        file-extension: yml
+        refresh-enabled: true
+        import-check:
+          enabled: false
+    loadbalancer:
+      nacos:
+        enabled: true
+      cache:
+        enabled: false
+      retry:
+        enabled: true
+        max-retries-on-same-service-instance: 1
+        max-retries-on-next-service-instance: 1
+        retry-on-all-operations: false
   rabbitmq:
     host: ${chatserver.rabbitmq.host}
     port: ${chatserver.rabbitmq.port}
@@ -48,7 +66,17 @@ spring:
           min-idle: 0
           # 连接池中最大连接数，负数表示没有限制
           max-active: 20
-
+dubbo:
+  application:
+    name: chat-server-provider
+    logger: slf4j
+  protocol:
+    name: dubbo
+    port: 50050
+  registry:
+    address: nacos://localhost:8848
+    username: nacos
+    password: nacos
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件

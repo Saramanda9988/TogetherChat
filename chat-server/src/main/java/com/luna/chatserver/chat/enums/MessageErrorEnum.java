@@ -1,6 +1,6 @@
 package com.luna.chatserver.chat.enums;
 
-import com.luna.chatserver.common.enums.ErrorEnum;
+import com.luna.common.enums.ErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
