@@ -1,6 +1,6 @@
 package com.luna.chatserver.chat.domain.request.message;
 
-import com.luna.chatserver.common.domain.vo.request.CursorPageBaseRequest;
+import com.luna.common.domain.vo.request.CursorPageBaseRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

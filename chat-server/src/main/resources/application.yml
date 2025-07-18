@@ -1,7 +1,7 @@
 server:
   tomcat:
     max-connections: 10000
-  port: 8081 #自定义端口号
+  port: ${chatserver.port}
   address: 0.0.0.0
 logging:
   level:
@@ -17,7 +17,7 @@ spring:
       discovery:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
-        port: 8081
+        port: ${chatserver.port}
       config:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
@@ -70,9 +70,11 @@ dubbo:
   application:
     name: chat-server-provider
     logger: slf4j
+    qos-enable: true
+    qos-port: 22224
   protocol:
     name: dubbo
-    port: 50050
+    port: 50052
   registry:
     address: nacos://localhost:8848
     username: nacos

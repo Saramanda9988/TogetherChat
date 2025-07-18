@@ -24,6 +24,7 @@
         <module>room-server</module>
         <module>auth-server</module>
         <module>websocket-server</module>
+        <module>common</module>
     </modules>
     <!--    <description>TogetherChat</description>-->
     <url/>

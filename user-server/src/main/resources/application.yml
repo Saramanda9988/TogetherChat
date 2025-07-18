@@ -1,7 +1,7 @@
 server:
   tomcat:
     max-connections: 10000
-  port: 8092 #自定义端口号
+  port: ${userserver.port} #自定义端口号
   address: 0.0.0.0
 logging:
   level:
@@ -17,6 +17,7 @@ spring:
       discovery:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
+        port: ${userserver.port}
       config:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
@@ -65,6 +66,18 @@ spring:
           min-idle: 0
           # 连接池中最大连接数，负数表示没有限制
           max-active: 20
+
+dubbo:
+  application:
+    name: user-server-provider
+    logger: slf4j
+  protocol:
+    name: dubbo
+    port: 50053
+  registry:
+    address: nacos://localhost:8848
+    username: nacos
+    password: nacos
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件

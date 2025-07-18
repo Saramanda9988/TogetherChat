@@ -2,7 +2,7 @@ package com.luna.chatserver.chat.event.consumer;
 
 import com.luna.chatserver.chat.dao.MessageDao;
 import com.luna.chatserver.chat.domain.entity.Message;
-import com.luna.chatserver.common.constant.MQConstant;
+import com.luna.common.constant.MQConstant;
 import jakarta.annotation.Resource;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

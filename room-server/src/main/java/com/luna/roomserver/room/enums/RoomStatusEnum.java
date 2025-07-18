@@ -1,5 +1,6 @@
 package com.luna.roomserver.room.enums;
 
+import com.luna.common.enums.MemberTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

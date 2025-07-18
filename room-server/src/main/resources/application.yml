@@ -1,7 +1,7 @@
 server:
   tomcat:
     max-connections: 10000
-  port: 8083 #自定义端口号
+  port: ${roomserver.port}
   address: 0.0.0.0
 logging:
   level:
@@ -17,7 +17,7 @@ spring:
       discovery:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
-        port: 8083
+        port: ${roomserver.port}
       config:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
@@ -72,7 +72,7 @@ dubbo:
     logger: slf4j
   protocol:
     name: dubbo
-    port: 50053
+    port: 50054
   registry:
     address: nacos://localhost:8848
     username: nacos

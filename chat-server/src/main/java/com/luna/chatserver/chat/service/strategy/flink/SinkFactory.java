@@ -1,8 +1,8 @@
 package com.luna.chatserver.chat.service.strategy.flink;
 
 import com.luna.chatserver.chat.service.strategy.flink.sink.AbstractSink;
-import com.luna.chatserver.common.enums.CommonErrorEnum;
-import com.luna.chatserver.common.utils.AssertUtil;
+import com.luna.common.enums.CommonErrorEnum;
+import com.luna.common.utils.AssertUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

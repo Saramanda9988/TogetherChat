@@ -6,7 +6,7 @@ import com.luna.chatserver.chat.domain.entity.message.MessageExtra;
 import com.luna.chatserver.chat.domain.request.message.ChatMessageRequest;
 import com.luna.chatserver.chat.enums.MessageTypeEnum;
 import com.luna.chatserver.chat.service.strategy.message.MessageHandlerFactory;
-import com.luna.chatserver.common.utils.AssertUtil;
+import com.luna.common.utils.AssertUtil;
 import jakarta.annotation.PostConstruct;
 
 import java.lang.reflect.ParameterizedType;

@@ -18,10 +18,13 @@ import com.luna.chatserver.chat.service.strategy.message.AbstractMessageHandler;
 import com.luna.chatserver.chat.service.strategy.message.MessageHandlerFactory;
 import com.luna.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.common.domain.vo.response.WSBaseResp;
+import com.luna.common.enums.MemberTypeEnum;
 import com.luna.common.enums.WSReqTypeEnum;
 import com.luna.common.exception.BusinessException;
 import com.luna.common.utils.AssertUtil;
+import com.luna.roomserver.room.service.RoomMemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,9 @@ public class ChatServiceImpl implements ChatService {
     private final MessageService messageService;
 
     private final MessageDao messageDao;
+
+    @DubboReference
+    private RoomMemberService roomMemberService;
 
     /**
      * 发送消息
@@ -79,7 +85,7 @@ public class ChatServiceImpl implements ChatService {
 
         // FIXME: 这里需要从会话服务中操作
         // 获取对应群组中的用户id
-        List<Long> userIdList = roomMemberDao.listUserIdByGroupId(message.getGroupId());
+        List<Long> userIdList = roomMemberService.listUserIdByGroupId(message.getGroupId());
 
         // 构建WebsocketRep
         WSBaseResp<ChatMessageResponse> wsBaseResp = new WSBaseResp<>();
@@ -122,15 +128,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void deleteMessage(ChatMessageDeleteRequest request, Long userId) {
         // TODO: 这里需要检查用户是否有权限删除消息
-        // 查询当前用户群角色
-        RoomMember member = roomMemberDao.getMemberByGroupIdAndUserId(request.getGroupId(), userId);
-        AssertUtil.isNull(member, MessageErrorEnum.PERMISSION_DENY);
-
-        // 检查是否有权限
-        if (Objects.equals(member.getRole(), MemberTypeEnum.MEMBER.getType()) && !Objects.equals(request.getOwnerId(), userId)) {
-            throw new BusinessException(MessageErrorEnum.DELETE_DENY);
+        boolean isValid = roomMemberService.validMember(request.getGroupId(), request.getOwnerId(), userId);
+        if (isValid) {
+            new BusinessException(MessageErrorEnum.DELETE_DENY);
         }
-
         // 检查消息是否存在
         Message message = messageDao.getById(request.getMessageID());
         AssertUtil.isNull(message, MessageErrorEnum.NO_SUCH_MESSAGE);

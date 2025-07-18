@@ -17,7 +17,7 @@ import com.luna.roomserver.room.domain.request.RoomPageRequest;
 import com.luna.roomserver.room.domain.request.RoomUpdateRequest;
 import com.luna.roomserver.room.domain.response.RoomResponse;
 import com.luna.roomserver.room.enums.RoomErrorEnum;
-import com.luna.roomserver.room.enums.MemberTypeEnum;
+import com.luna.common.enums.MemberTypeEnum;
 import com.luna.roomserver.room.enums.RoomStatusEnum;
 import com.luna.roomserver.room.event.PushService;
 import com.luna.roomserver.room.service.RoomService;
@@ -47,7 +47,6 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomDao roomDao;
     private final RoomMemberDao roomMemberDao;
-    private final ApplicationEventPublisher applicationEventPublisher;
     private final PushService pushService;
 
     /**

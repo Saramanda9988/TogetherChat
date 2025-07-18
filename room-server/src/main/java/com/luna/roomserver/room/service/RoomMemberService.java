@@ -9,6 +9,8 @@ import com.luna.roomserver.room.domain.request.RoomMemberUpdateRequest;
 import com.luna.roomserver.room.domain.response.RoomMemberResponse;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 /**
  * <p>
  *  群组成员服务接口
@@ -50,4 +52,8 @@ public interface RoomMemberService {
      * @return
      */
     CursorPageBaseResponse<RoomMember> getRoomMembers(@Valid RoomMemberPageRequest request, Long userId);
+
+    boolean validMember(Long groupId, Long ownId, Long userId);
+
+    List<Long> listUserIdByGroupId(Long groupId);
 }

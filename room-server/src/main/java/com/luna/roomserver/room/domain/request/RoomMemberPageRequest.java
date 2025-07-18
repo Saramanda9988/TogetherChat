@@ -1,6 +1,6 @@
 package com.luna.roomserver.room.domain.request;
 
-import com.luna.roomserver.common.domain.vo.request.CursorPageBaseRequest;
+import com.luna.common.domain.vo.request.CursorPageBaseRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

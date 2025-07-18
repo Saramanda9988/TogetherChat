@@ -3,7 +3,7 @@ package com.luna.chatserver.chat.service.strategy.flink.consumer;
 import com.luna.chatserver.chat.service.strategy.flink.SinkFactory;
 import com.luna.chatserver.chat.service.strategy.flink.sink.AbstractSink;
 import com.luna.chatserver.chat.service.strategy.flink.sink.entity.Change;
-import com.luna.chatserver.common.constant.MQConstant;
+import com.luna.common.constant.MQConstant;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;

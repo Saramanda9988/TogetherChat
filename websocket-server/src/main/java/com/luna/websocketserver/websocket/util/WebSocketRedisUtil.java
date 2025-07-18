@@ -19,7 +19,7 @@ public class WebSocketRedisUtil {
     private static final String REDIS_USER_SERVER_KEY = "websocket:online:user:";
     private static final String REDIS_SERVER_USER_KEY = "websocket:online:server:";
 
-    @Value("${websocket.server.port}")
+    @Value("${netty.server.port}")
     private String webSocketPort;
 
     private String serverAddress;

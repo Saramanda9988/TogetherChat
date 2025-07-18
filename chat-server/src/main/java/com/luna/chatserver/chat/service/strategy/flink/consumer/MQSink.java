@@ -4,7 +4,7 @@ import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luna.chatserver.chat.service.strategy.flink.sink.entity.Change;
 import com.luna.chatserver.chat.service.strategy.flink.sink.entity.ChangeTypeEnum;
-import com.luna.chatserver.common.constant.MQConstant;
+import com.luna.common.constant.MQConstant;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

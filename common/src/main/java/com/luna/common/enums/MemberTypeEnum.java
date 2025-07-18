@@ -1,4 +1,4 @@
-package com.luna.roomserver.room.enums;
+package com.luna.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

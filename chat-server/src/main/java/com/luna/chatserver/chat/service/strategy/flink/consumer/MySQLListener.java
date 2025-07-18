@@ -16,23 +16,23 @@ import org.springframework.stereotype.Component;
 public class MySQLListener implements ApplicationRunner {
 
     @Value("${chatserver.mysql.ip}")
-    private  String mysqlIP;
+    private String mysqlIP;
     @Value("${chatserver.mysql.port}")
-    private  String mysqlPort;
+    private String mysqlPort;
     @Value("${chatserver.mysql.username}")
-    private  String mysqlUsername;
+    private String mysqlUsername;
     @Value("${chatserver.mysql.password}")
-    private  String mysqlPassword;
+    private String mysqlPassword;
     @Value("${chatserver.mysql.db}")
-    private  String mysqlDb;
+    private String mysqlDb;
     @Value("${chatserver.redis.host}")
-    private  String redisHost;
+    private String redisHost;
     @Value("${chatserver.redis.port}")
-    private  String redisPort;
+    private String redisPort;
     @Value("${chatserver.message.table.name}")
-    private  String message;
+    private String message;
     @Value("${chatserver.room_member.table.name}")
-    private  String room_group_member;
+    private String room_group_member;
 
 
     private final MQSink mqSink;
@@ -56,7 +56,7 @@ public class MySQLListener implements ApplicationRunner {
         DataStreamSink sink = env.fromSource(
                         source,
                         WatermarkStrategy.noWatermarks(),
-                        "tuanchat-mysql")
+                        "togetherchat-mysql")
                 .addSink(mqSink);
 //        env.execute("TuanChat Application");
     }

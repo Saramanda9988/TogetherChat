@@ -6,6 +6,7 @@ import com.luna.common.domain.vo.response.CursorPageBaseResponse;
 import com.luna.common.domain.vo.response.WSBaseResp;
 import com.luna.common.enums.WSRespTypeEnum;
 import com.luna.common.exception.BusinessException;
+import com.luna.common.utils.AssertUtil;
 import com.luna.roomserver.room.dao.RoomDao;
 import com.luna.roomserver.room.dao.RoomMemberDao;
 import com.luna.roomserver.room.domain.entity.Room;
@@ -14,9 +15,8 @@ import com.luna.roomserver.room.domain.request.RoomMemberAddRequest;
 import com.luna.roomserver.room.domain.request.RoomMemberPageRequest;
 import com.luna.roomserver.room.domain.request.RoomMemberRemoveRequest;
 import com.luna.roomserver.room.domain.request.RoomMemberUpdateRequest;
-import com.luna.roomserver.room.domain.response.RoomMemberResponse;
 import com.luna.roomserver.room.enums.RoomErrorEnum;
-import com.luna.roomserver.room.enums.MemberTypeEnum;
+import com.luna.common.enums.MemberTypeEnum;
 import com.luna.roomserver.room.enums.RoomStatusEnum;
 import com.luna.roomserver.room.event.PushService;
 import com.luna.roomserver.room.service.RoomMemberService;
@@ -258,5 +258,19 @@ public class RoomMemberServiceImpl implements RoomMemberService {
 
         // 推送消息给群组所有成员
         pushService.sendPushMsg(wsBaseResp, allMemberIds);
+    }
+
+    public boolean validMember(Long groupId, Long ownId, Long userId) {
+        // 查询当前用户群角色
+        RoomMember member = roomMemberDao.getMemberByGroupIdAndUserId(groupId, userId);
+        if (Objects.isNull(member)) {
+            return false;
+        }
+        // 检查是否有权限
+        return !Objects.equals(member.getRole(), MemberTypeEnum.MEMBER.getType()) || Objects.equals(ownId, userId);
+    }
+
+    public List<Long> listUserIdByGroupId(Long groupId) {
+        return roomMemberDao.listUserIdByGroupId(groupId);
     }
 }

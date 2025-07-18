@@ -1,7 +1,7 @@
 package com.luna.chatserver.chat.service.strategy.message;
 
-import com.luna.chatserver.common.enums.CommonErrorEnum;
-import com.luna.chatserver.common.utils.AssertUtil;
+import com.luna.common.enums.CommonErrorEnum;
+import com.luna.common.utils.AssertUtil;
 
 import java.util.HashMap;
 import java.util.Map;
