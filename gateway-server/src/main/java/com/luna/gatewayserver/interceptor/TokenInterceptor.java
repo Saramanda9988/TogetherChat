@@ -1,6 +1,7 @@
 package com.luna.gatewayserver.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -29,13 +30,8 @@ public class TokenInterceptor implements GlobalFilter {
     public static final String HEADER_USER_ID = "X-User-Id";
 
     // 需要排除的公共路径
-    private static final String[] EXCLUDED_PATHS = {
-        "/capi/auth/login",
-        "/capi/auth/register",
-        "/capi/auth/refresh",
-        "/health",
-        "/actuator"
-    };
+    @Value("${togetherchat.interceptor.exclude_paths}")
+    private String[] EXCLUDED_PATHS;
 
     // TODO:这里方便开发，只要求前端在请求头中携带用户ID，实际应用中应使用JWT或其他安全机制验证token
     @Override

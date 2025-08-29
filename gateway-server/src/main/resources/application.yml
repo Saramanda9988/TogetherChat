@@ -35,60 +35,6 @@ spring:
         max-retries-on-same-service-instance: 1
         max-retries-on-next-service-instance: 1
         retry-on-all-operations: false
-    gateway:
-      routes:
-        - id: user-server
-          uri: lb://user-server
-          predicates:
-            - Path=/capi/user/**
-          filters:
-            - StripPrefix=1
-
-        - id: chat-server
-          uri: lb://chat-server
-          predicates:
-            - Path=/capi/chat/**
-          filters:
-            - StripPrefix=1
-
-        - id: room-server
-          uri: lb://room-server
-          predicates:
-            - Path=/capi/room/**
-          filters:
-            - StripPrefix=1
-
-        - id: webrtc-server
-          uri: lb://webrtc-server
-          predicates:
-            - Path=/capi/webrtc/**
-          filters:
-            - StripPrefix=1
-        
-          # Auth Service路由 - 公开接口
-        - id: auth-service-public
-          uri: lb://auth-server
-          predicates:
-            - Path=/capi/auth/login,/capi/auth/register,/capi/auth/refresh
-          filters:
-            - StripPrefix=1
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            # 生产环境应指定具体域名
-            allowedOrigins: 
-              - "http://localhost:3000"  # 前端开发地址
-              - "http://localhost:8848"  # 其他允许的域名
-            allowedMethods: 
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: 
-              - "*"
-            allowCredentials: true
-            maxAge: 3600
 
 logging:
   level:

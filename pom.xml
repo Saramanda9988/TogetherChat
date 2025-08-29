@@ -18,13 +18,17 @@
     
     <!-- Microservice modules -->
     <modules>
+        <module>common</module>
+        <module>gateway-server</module>
+        <module>user-service</module>
+        <module>communication-service</module>
+        <!-- Legacy modules - 待迁移完成后删除 -->
         <module>gateway-server</module>
         <module>user-server</module>
         <module>chat-server</module>
         <module>room-server</module>
         <module>auth-server</module>
         <module>websocket-server</module>
-        <module>common</module>
     </modules>
     <!--    <description>TogetherChat</description>-->
     <url/>
