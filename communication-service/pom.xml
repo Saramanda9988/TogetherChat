@@ -9,40 +9,18 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>auth-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>auth-server</name>
-    <description>auth-server</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    
+    <artifactId>communication-service</artifactId>
+    <name>communication-service</name>
+    <description>Communication Service - 通信服务(消息、群组、实时通信)</description>
+    
     <dependencies>
         <!-- 公共模块 -->
         <dependency>
             <groupId>com.luna</groupId>
             <artifactId>common</artifactId>
         </dependency>
-
-        <!-- Dubbo -->
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-nacos-spring-boot-starter</artifactId>
-        </dependency>
-
+        
         <!-- 服务注册发现 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -60,26 +38,21 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
-        <!-- Swagger文档 -->
+        
+        <!-- 监控 -->
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
+        
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
-
+    
     <build>
         <plugins>
             <plugin>
@@ -96,5 +69,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

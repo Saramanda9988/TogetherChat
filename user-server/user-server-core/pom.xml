@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.luna</groupId>
-        <artifactId>TogetherChat</artifactId>
+        <artifactId>user-server</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>auth-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>auth-server</name>
-    <description>auth-server</description>
+    <artifactId>user-server-core</artifactId>
+    <name>user-server-core</name>
+    <description>User Server Core Implementation for TogetherChat Microservices</description>
     <url/>
     <licenses>
         <license/>
@@ -27,6 +26,12 @@
         <url/>
     </scm>
     <dependencies>
+        <!-- User Server API 模块 -->
+        <dependency>
+            <groupId>com.luna</groupId>
+            <artifactId>user-server-api</artifactId>
+        </dependency>
+
         <!-- 公共模块 -->
         <dependency>
             <groupId>com.luna</groupId>
@@ -61,10 +66,54 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!-- Swagger文档 -->
+        <!-- 用户服务特有依赖 -->
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
+            <groupId>org.javers</groupId>
+            <artifactId>javers-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.java-diff-utils</groupId>
+            <artifactId>java-diff-utils</artifactId>
+        </dependency>
+
+        <!-- Flink流处理（如果需要） -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-rabbitmq_2.11</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-sql-connector-mysql-cdc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-runtime</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 兼容性依赖 -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
         </dependency>
 
         <!-- 测试 -->

@@ -144,6 +144,20 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- User Server API 模块 -->
+            <dependency>
+                <groupId>com.luna</groupId>
+                <artifactId>user-server-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- User Server Core 模块 -->
+            <dependency>
+                <groupId>com.luna</groupId>
+                <artifactId>user-server-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- Dubbo -->
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
@@ -427,14 +441,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
