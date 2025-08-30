@@ -22,18 +22,7 @@ spring:
         refresh-enabled: true
         import-check:
           enabled: false
-    openfeign:
-      client:
-        config:
-          default:
-            connect-timeout: 10000 # 连接超时时间
-            read-timeout: 10000 # 读取超时时间
-            retryer:
-      compression:
-        request:
-          enabled: true
-        response:
-          enabled: true
+
     loadbalancer:
       nacos:
         enabled: true
@@ -113,5 +102,21 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+# Dubbo配置
+dubbo:
+  application:
+    name: auth-server
+    version: 1.0.0
+  registry:
+    address: nacos://localhost:8848
+    group: DEFAULT_GROUP
+  consumer:
+    timeout: 3000
+    retries: 2
+    check: false
+    loadbalance: roundrobin
+  metadata-report:
+    address: nacos://localhost:8848
 
 

@@ -2,17 +2,14 @@ package com.luna.authserver.auth.controller;
 
 import com.luna.authserver.auth.domain.request.LoginRequest;
 import com.luna.authserver.auth.domain.request.RegisterRequest;
-import com.luna.authserver.auth.domain.response.LoginInfoVO;
 import com.luna.authserver.auth.service.AuthService;
-import com.luna.common.constant.Const;
 import com.luna.common.domain.vo.response.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Slf4j
 @RestController
@@ -22,7 +19,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AuthController {
 
      private final AuthService authService;
-     @GetMapping("logout")
+
+     @GetMapping("/logout")
      @Operation(summary = "退出登录", description = "退出登录")
      public ApiResult<Void> logout() {
           authService.logout();

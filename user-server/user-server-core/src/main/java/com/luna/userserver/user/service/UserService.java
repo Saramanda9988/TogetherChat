@@ -1,27 +1,38 @@
 package com.luna.userserver.user.service;
 
-import com.luna.common.domain.vo.request.CreateUserRequest;
-import com.luna.common.domain.dto.UserDTO;
+import com.luna.userserver.user.dao.UserDao;
 import com.luna.userserver.user.domain.entity.User;
 import com.luna.userserver.user.domain.response.UserInfoResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
- *  服务类
+ *  服务实现类
  * </p>
  *
  * @author LunaRain_079
  * @since 2025-05-05
  */
-public interface UserService {
+@Service
+@AllArgsConstructor
+public class UserService {
 
-    UserInfoResponse getUserInfo(Long userId);
+    private final UserDao userDao;
 
-    void updateUserInfo(UserInfoResponse userInfoResponse);
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userDao.getById(userId);
+        return UserInfoResponse
+                .builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .activeStatus(user.getStatus())
+                .build();
+    }
 
-    User getUserById(String userId);
-
-    void updateLastLoginTime(Long userId);
-
-    UserDTO createUser(CreateUserRequest request);
+    @Transactional
+    public void updateUserInfo(UserInfoResponse userInfoResponse) {
+        userDao.updateById(new User(userInfoResponse));
+    }
 }

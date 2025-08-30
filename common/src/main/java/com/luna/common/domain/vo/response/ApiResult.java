@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Schema(description = "基础返回体")
-public class ApiResult<T> {
+public class ApiResult<T> implements Serializable {
 
     @Schema(description = "成功标识true or false")
     @NotNull

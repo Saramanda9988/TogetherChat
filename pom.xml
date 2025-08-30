@@ -62,7 +62,7 @@
         <!-- 工具类版本 -->
         <hutool.version>5.8.25</hutool.version>
         <lombok.version>1.18.30</lombok.version>
-        <netty.version>4.1.112.Final</netty.version>
+        <netty.version>4.2.4.Final</netty.version>
         
         <!-- JWT版本 -->
         <jjwt.version>0.11.5</jjwt.version>
@@ -198,6 +198,7 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+            <!-- Netty version managed by Spring Boot -->
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>

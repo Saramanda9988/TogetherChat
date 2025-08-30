@@ -45,3 +45,5 @@ src/resources/
 nacos-server/
 
 /logs
+
+/.kiro

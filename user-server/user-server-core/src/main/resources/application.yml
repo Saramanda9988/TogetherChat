@@ -78,6 +78,11 @@ dubbo:
     address: nacos://localhost:8848
     username: nacos
     password: nacos
+  provider:
+    timeout: 3000
+    retries: 1
+    loadbalance: roundrobin
+    group: user-service
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件
