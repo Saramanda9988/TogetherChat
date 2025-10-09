@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -36,7 +37,6 @@ public class TokenInterceptor implements GlobalFilter {
     @Value("${togetherchat.interceptor.exclude_paths}")
     private String[] EXCLUDED_PATHS;
 
-    // TODO:这里方便开发，只要求前端在请求头中携带用户ID，实际应用中应使用JWT或其他安全机制验证token
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getPath().value();
@@ -54,20 +54,29 @@ public class TokenInterceptor implements GlobalFilter {
                 .map(h -> h.substring(AUTHORIZATION_SCHEMA.length()))
                 .orElse(null);
 
-        Long validUid = null;
-
-        try {
-            validUid = Long.parseLong(Objects.requireNonNull(token));
-        } catch (Exception e) {
-            log.warn("Invalid token format: {}", token);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return Mono.empty();
-        }
-
         ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                 .header(HEADER_USER_ID, String.valueOf(validUid))
                 .build();
         // 继续执行过滤器链
         return chain.filter(exchange.mutate().request(modifiedRequest).build());
+    }
+
+    /**
+     * 通过注解判断是否为公共API
+     *
+     * @param handler 处理器
+     * @return 是否为公共API
+     */
+    private int isPublicAPI(Object handler) {
+        if (handler instanceof HandlerMethod handlerMethod) {
+            // 检查方法上是否有@PublicAPI注解
+            PublicAPI methodAnnotation = handlerMethod.getMethodAnnotation(PublicAPI.class);
+            if (methodAnnotation != null) {return true;}
+
+            // 检查控制器类上是否有@PublicAPI注解
+            PublicAPI classAnnotation = handlerMethod.getBeanType().getAnnotation(PublicAPI.class);
+            return classAnnotation != null;
+        }
+        return false;
     }
 }
