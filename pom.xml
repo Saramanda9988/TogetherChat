@@ -24,7 +24,6 @@
         <module>user-server</module>
         <module>room-server</module>
         <module>im-server</module>
-        <module>communication-service</module>
     </modules>
     <!--    <description>TogetherChat</description>-->
     <url/>

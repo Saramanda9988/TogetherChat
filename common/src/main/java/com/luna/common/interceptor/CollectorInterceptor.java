@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Optional;
 
-import static com.luna.common.filter.UserContextFilter.ATTRIBUTE_UID;
+import static com.luna.common.interceptor.UserContextFilter.ATTRIBUTE_UID;
 
 /**
  * 信息收集的拦截器

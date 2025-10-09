@@ -1,0 +1,146 @@
+server:
+  tomcat:
+    max-connections: 10000
+  port: ${imtcpserver.port} #自定义端口号
+  address: 0.0.0.0
+logging:
+  level:
+    root: info
+spring:
+  profiles:
+    #运行的环境
+    active: @spring.profiles.active@
+  application:
+    name: user-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        port: ${imtcpserver.port}
+      config:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        file-extension: yml
+        refresh-enabled: true
+        import-check:
+          enabled: false
+    loadbalancer:
+      nacos:
+        enabled: true
+      cache:
+        enabled: false
+      retry:
+        enabled: true
+        max-retries-on-same-service-instance: 1
+        max-retries-on-next-service-instance: 1
+        retry-on-all-operations: false
+  rabbitmq:
+    host: ${imtcpserver.rabbitmq.host}
+    port: ${imtcpserver.rabbitmq.port}
+    username: ${imtcpserver.rabbitmq.username}
+    password: ${imtcpserver.rabbitmq.password}
+#  datasource:
+#    url: jdbc:mysql://${imtcpserver.mysql.ip}:${imtcpserver.mysql.port}/${imtcpserver.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#    username: ${imtcpserver.mysql.username}
+#    password: ${imtcpserver.mysql.password}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+    # Redis服务器地址
+      host: ${imtcpserver.redis.host}
+     # Redis服务器端口号
+      port: ${imtcpserver.redis.port}
+        # 使用的数据库索引，默认是0
+      database: 0
+      # 连接超时时间
+      timeout: 1800000
+      # 设置密码
+      lettuce:
+        pool:
+          # 最大阻塞等待时间，负数表示没有限制
+          max-wait: -1
+          # 连接池中的最大空闲连接
+          max-idle: 5
+          # 连接池中的最小空闲连接
+          min-idle: 0
+          # 连接池中最大连接数，负数表示没有限制
+          max-active: 20
+
+dubbo:
+  application:
+    name: user-server-provider
+    logger: slf4j
+  protocol:
+    name: dubbo
+    port: 50053
+  registry:
+    address: nacos://localhost:8848
+    username: nacos
+    password: nacos
+  provider:
+    timeout: 3000
+    retries: 1
+    loadbalance: roundrobin
+    group: user-service
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件
+  global-config:
+    db-config:
+      # 指定数据库中主键的生成方式，auto 表示数据库中主键的生成方式为自动生成，通常使用数据库的自增功能。
+      # 不加的话，生成的 id 过大，会导致前端溢出
+      id-type: auto
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    logic-delete-field: deleted # 全局逻辑删除的实体字段名
+#    logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+#    logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+    map-underscore-to-camel-case: true
+    #NONE 取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。 FULL 会自动映射任意复杂的结果集（无论是否嵌套）
+    auto-mapping-behavior: FULL
+
+resilience4j:
+  retry: # 重试器
+    instances:
+      retryApi:
+        maxAttempts: 3
+        waitDuration: 1 # 10秒
+  circuitBreaker: # 熔断器
+    instances:
+      circuitBreakerApi:
+        registerHealthIndicator: true # 注册健康指示器
+        slidingWindowSize: 10        # 熔断器滑动窗口大
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 20
+        eventConsumerBufferSize: 10 # 事件消费者缓冲区大小
+  rateLimiter: # 限流器
+    instances:
+      rateLimiterService:
+        limitForPeriod: 1 # 每秒限制的请求数
+        limitRefreshPeriod: 1s # 限制的刷新时间，单位秒
+        timeoutDuration: 100ms # 超时时间，单位秒
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaominfo.knife4j.demo.web
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+

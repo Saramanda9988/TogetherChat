@@ -28,6 +28,9 @@ public class TokenInterceptor implements GlobalFilter {
     public static final String AUTHORIZATION_SCHEMA = "Bearer ";
     // 网关传入的用户ID请求头，网关在验证token后设置
     public static final String HEADER_USER_ID = "X-User-Id";
+    public static final String HEADER_APP_ID = "X-App-Id";
+    public static final String HEADER_CLIENT_TYPE = "X-Client-Type";
+    public static final String HEADER_IMEI = "X-IMEI";
 
     // 需要排除的公共路径
     @Value("${togetherchat.interceptor.exclude_paths}")

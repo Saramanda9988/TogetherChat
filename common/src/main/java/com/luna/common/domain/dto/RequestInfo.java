@@ -16,6 +16,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestInfo {
     private Long userId;
+
     private String username;
+
     private String ip;
+
+    private Integer clientType;
+
+    private String imei;
+
+    private Integer appId;
 }

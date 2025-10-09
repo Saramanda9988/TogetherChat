@@ -1,7 +1,8 @@
 package com.luna.common.config;
 
-import com.luna.common.config.SecureInvokeConfigurer;
-import com.luna.common.factory.MyThreadFactory;
+import com.luna.common.handler.GlobalUncaughtExceptionHandler;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -65,5 +67,17 @@ public class ThreadPoolConfig implements AsyncConfigurer, SecureInvokeConfigurer
         executor.setThreadFactory(new MyThreadFactory(executor));
         executor.initialize();
         return executor;
+    }
+
+    @Slf4j
+    @AllArgsConstructor
+    public static class MyThreadFactory implements ThreadFactory {
+        private final ThreadFactory factory;
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = factory.newThread(r);
+            thread.setUncaughtExceptionHandler(GlobalUncaughtExceptionHandler.getInstance());
+            return thread;
+        }
     }
 }
