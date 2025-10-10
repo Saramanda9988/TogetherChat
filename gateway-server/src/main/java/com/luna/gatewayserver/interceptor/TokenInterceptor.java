@@ -1,5 +1,10 @@
 package com.luna.gatewayserver.interceptor;
 
+import com.luna.common.annotation.PublicAPI;
+import com.luna.common.domain.dto.RequestInfo;
+import com.luna.common.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -11,6 +16,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.servlet.HandlerInterceptor;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
@@ -27,6 +33,7 @@ public class TokenInterceptor implements GlobalFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_SCHEMA = "Bearer ";
+
     // 网关传入的用户ID请求头，网关在验证token后设置
     public static final String HEADER_USER_ID = "X-User-Id";
     public static final String HEADER_APP_ID = "X-App-Id";
@@ -54,29 +61,26 @@ public class TokenInterceptor implements GlobalFilter {
                 .map(h -> h.substring(AUTHORIZATION_SCHEMA.length()))
                 .orElse(null);
 
-        ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                .header(HEADER_USER_ID, String.valueOf(validUid))
-                .build();
-        // 继续执行过滤器链
-        return chain.filter(exchange.mutate().request(modifiedRequest).build());
-    }
+        try {
 
-    /**
-     * 通过注解判断是否为公共API
-     *
-     * @param handler 处理器
-     * @return 是否为公共API
-     */
-    private int isPublicAPI(Object handler) {
-        if (handler instanceof HandlerMethod handlerMethod) {
-            // 检查方法上是否有@PublicAPI注解
-            PublicAPI methodAnnotation = handlerMethod.getMethodAnnotation(PublicAPI.class);
-            if (methodAnnotation != null) {return true;}
+            RequestInfo requestInfo = JwtUtils.parseJwtToken(token);
 
-            // 检查控制器类上是否有@PublicAPI注解
-            PublicAPI classAnnotation = handlerMethod.getBeanType().getAnnotation(PublicAPI.class);
-            return classAnnotation != null;
+            if (requestInfo == null || requestInfo.getUserId() == null) {
+                throw new RuntimeException("token无效");
+            }
+
+            ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                    .header(HEADER_USER_ID, String.valueOf(requestInfo.getUserId()))
+                    .header(HEADER_IMEI, requestInfo.getImei())
+                    .header(HEADER_APP_ID, String.valueOf(requestInfo.getAppId()))
+                    .header(HEADER_CLIENT_TYPE, String.valueOf(requestInfo.getClientType()))
+                    .build();
+            // 继续执行过滤器链
+            return chain.filter(exchange.mutate().request(modifiedRequest).build());
+        } catch (Exception e) {
+            // token无效，拒绝访问
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
         }
-        return false;
     }
 }

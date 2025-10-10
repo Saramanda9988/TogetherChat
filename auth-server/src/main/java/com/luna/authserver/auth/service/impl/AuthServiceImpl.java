@@ -36,7 +36,6 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.equals(result.getPassword(), userLoginRequest.getPassword())) {
             return result.getUserId().toString();
         }
-        return null;
     }
 
     @Override

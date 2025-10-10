@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Optional;
 
-import static com.luna.common.interceptor.UserContextFilter.ATTRIBUTE_UID;
+import static com.luna.common.interceptor.UserContextFilter.*;
 
 /**
  * 信息收集的拦截器
@@ -32,6 +32,18 @@ public class CollectorInterceptor implements HandlerInterceptor {
                 .orElse(null));
 
         info.setIp(JakartaServletUtil.getClientIP(request));
+
+        info.setImei(Optional.ofNullable(request.getAttribute(ATTRIBUTE_IMEI))
+                .map(Object::toString)
+                .orElse(null));
+        info.setAppId(Optional.ofNullable(request.getAttribute(ATTRIBUTE_IMEI))
+                .map(Object::toString)
+                .map(Integer::parseInt)
+                .orElse(null));
+        info.setClientType(Optional.ofNullable(request.getAttribute(ATTRIBUTE_CLIENT_TYPE))
+                .map(Object::toString)
+                .map(Integer::parseInt)
+                .orElse(null));
 
         RequestHolder.set(info);
         return true;

@@ -26,6 +26,12 @@
         <url/>
     </scm>
     <dependencies>
+        <dependency>
+            <groupId>com.luna</groupId>
+            <artifactId>common-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- Spring Boot 基础依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,28 +63,6 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- 数据存储 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-        </dependency>
-        
         <!-- 通信相关 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -95,36 +79,6 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-        </dependency>
-        
-        <!-- 安全认证 -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-        </dependency>
-        
-        <!-- 文件存储 -->
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
         </dependency>
         
         <!-- 工具类 -->
@@ -158,16 +112,6 @@
             <artifactId>resilience4j-spring-boot3</artifactId>
         </dependency>
         
-        <!-- JSON处理 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        
         <!-- 文档工具 -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -176,22 +120,6 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
-        
-        <!-- 监控 -->
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-logback-1.x</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
-        </dependency>
-        
-        <!-- AOP -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
         </dependency>
         
         <!-- 参数验证 -->
@@ -233,13 +161,6 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-        </dependency>
-        
-        <!-- 测试 -->
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <scope>test</scope>
         </dependency>
         
         <!-- 其他 -->
