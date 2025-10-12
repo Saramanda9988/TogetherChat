@@ -36,7 +36,7 @@ public class CollectorInterceptor implements HandlerInterceptor {
         info.setImei(Optional.ofNullable(request.getAttribute(ATTRIBUTE_IMEI))
                 .map(Object::toString)
                 .orElse(null));
-        info.setAppId(Optional.ofNullable(request.getAttribute(ATTRIBUTE_IMEI))
+        info.setAppId(Optional.ofNullable(request.getAttribute(ATTRIBUTE_APP_ID))
                 .map(Object::toString)
                 .map(Integer::parseInt)
                 .orElse(null));

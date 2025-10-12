@@ -1,8 +1,10 @@
 package com.luna.gatewayserver.interceptor;
 
 import com.luna.common.annotation.PublicAPI;
+import com.luna.common.constant.RedisKey;
 import com.luna.common.domain.dto.RequestInfo;
 import com.luna.common.utils.JwtUtils;
+import com.luna.common.utils.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 改进版的Token拦截器，使用注解方式标记公共API
@@ -32,6 +35,7 @@ import java.util.Optional;
 public class TokenInterceptor implements GlobalFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
     public static final String AUTHORIZATION_SCHEMA = "Bearer ";
 
     // 网关传入的用户ID请求头，网关在验证token后设置
@@ -62,8 +66,25 @@ public class TokenInterceptor implements GlobalFilter {
                 .orElse(null);
 
         try {
-
+            // 首先检查访问token是否在黑名单中
+            if (token != null && RedisUtils.hasKey(String.format(RedisKey.TOKEN_BLACKLIST_KEY, token))) {
+                throw new RuntimeException("token已被注销");
+            }
+            
+            // 首先尝试解析访问token
             RequestInfo requestInfo = JwtUtils.parseJwtToken(token);
+
+            // 如果访问token无效，尝试解析refresh token
+            if (requestInfo == null || requestInfo.getUserId() == null) {
+                String refreshToken = headers.getFirst(REFRESH_TOKEN_HEADER);
+                if (refreshToken != null) {
+                    // 检查刷新token是否在黑名单中
+                    if (RedisUtils.hasKey(String.format(RedisKey.TOKEN_BLACKLIST_KEY, refreshToken))) {
+                        throw new RuntimeException("refresh token已被注销");
+                    }
+                    requestInfo = JwtUtils.parseJwtToken(refreshToken);
+                }
+            }
 
             if (requestInfo == null || requestInfo.getUserId() == null) {
                 throw new RuntimeException("token无效");

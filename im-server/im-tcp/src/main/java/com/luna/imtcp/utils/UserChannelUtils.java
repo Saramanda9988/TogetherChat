@@ -1,10 +1,10 @@
 package com.luna.imtcp.utils;
 
+import com.luna.common.domain.dto.RequestInfo;
 import com.luna.common.utils.JsonUtils;
 import com.luna.common.utils.RedisUtils;
 import com.luna.imtcp.api.common.ChannelConstants;
 import com.luna.imtcp.api.common.WebConstants;
-import com.luna.common.domain.dto.UserClientDto;
 import com.luna.imtcp.api.enums.ConnectStateEnums;
 import com.luna.imtcp.api.user.UserSession;
 import io.netty.channel.Channel;
@@ -23,34 +23,34 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class UserChannelRepository {
+public class UserChannelUtils {
     private static final ChannelGroup CHANNEL_GROUP = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    private static final Map<UserClientDto, Channel> USER_CHANNEL = new ConcurrentHashMap<>();
+    private static final Map<RequestInfo, Channel> USER_CHANNEL = new ConcurrentHashMap<>();
     private static final Object bindLocker = new Object();
     private static final Object removeLocker = new Object();
 
-    public static void bind(UserClientDto userClientDto, Channel channel) {
+    public static void bind(RequestInfo requestInfo, Channel channel) {
         synchronized (bindLocker) {
             // 此时channel一定已经在ChannelGroup中了
 
             // 之前已经绑定过了，移除并释放掉之前绑定的channel
             // LoginStatusMap  userChannelKey --> channel
-            if (USER_CHANNEL.containsKey(userClientDto)) {
-                Channel oldChannel = USER_CHANNEL.get(userClientDto);
+            if (USER_CHANNEL.containsKey(requestInfo)) {
+                Channel oldChannel = USER_CHANNEL.get(requestInfo);
                 CHANNEL_GROUP.remove(oldChannel);
                 oldChannel.close();
             }
 
             // 双向绑定
             // channel -> user property
-            channel.attr(AttributeKey.valueOf(ChannelConstants.UserId)).set(userClientDto.getUserId());
-            channel.attr(AttributeKey.valueOf(ChannelConstants.AppId)).set(userClientDto.getAppId());
-            channel.attr(AttributeKey.valueOf(ChannelConstants.ClientType)).set(userClientDto.getClientType());
-            channel.attr(AttributeKey.valueOf(ChannelConstants.imei)).set(userClientDto.getImei());
-            channel.attr(AttributeKey.valueOf(ChannelConstants.ClientImei)).set(userClientDto.getClientType() + ":" + userClientDto.getImei());
+            channel.attr(AttributeKey.valueOf(ChannelConstants.UserId)).set(requestInfo.getUserId());
+            channel.attr(AttributeKey.valueOf(ChannelConstants.AppId)).set(requestInfo.getAppId());
+            channel.attr(AttributeKey.valueOf(ChannelConstants.ClientType)).set(requestInfo.getClientType());
+            channel.attr(AttributeKey.valueOf(ChannelConstants.imei)).set(requestInfo.getImei());
+            channel.attr(AttributeKey.valueOf(ChannelConstants.ClientImei)).set(requestInfo.getClientType() + ":" + requestInfo.getImei());
 
             // userChannelKey -> channel
-            USER_CHANNEL.put(userClientDto, channel);
+            USER_CHANNEL.put(requestInfo, channel);
         }
     }
 
@@ -59,13 +59,19 @@ public class UserChannelRepository {
      * @param channel
      * @return
      */
-    public static UserClientDto getUserInfo(Channel channel) {
-        String userId = (String) channel.attr(AttributeKey.valueOf(ChannelConstants.UserId)).get();
+    public static RequestInfo getUserInfo(Channel channel) {
+        Long userId = Long.parseLong(channel.attr(AttributeKey.valueOf(ChannelConstants.UserId)).get().toString());
         Integer appId = (Integer) channel.attr(AttributeKey.valueOf(ChannelConstants.AppId)).get();
         Integer clientType = (Integer) channel.attr(AttributeKey.valueOf(ChannelConstants.ClientType)).get();
         String imei = (String) channel.attr(AttributeKey.valueOf(ChannelConstants.imei)).get();
 
-        return new UserClientDto(appId, userId, clientType, imei);
+        return RequestInfo
+                .builder()
+                .userId(userId)
+                .imei(imei)
+                .appId(appId)
+                .clientType(clientType)
+                .build();
     }
 
     public static void add(Channel channel) {
@@ -79,7 +85,7 @@ public class UserChannelRepository {
     public static void remove(Channel channel) {
         synchronized(removeLocker) { // 确保原子性
 
-            UserClientDto userInfo = getUserInfo(channel);
+            RequestInfo userInfo = getUserInfo(channel);
 
             // userInfo 有可能为空。可能 chanelActive 之后，由于前端原因（或者网络原因）没有及时绑定 userInfo。
             // 此时 netty 认为 channelInactive 了，就移除通道，这时 userInfo 就是 null
@@ -99,7 +105,7 @@ public class UserChannelRepository {
         }
     }
 
-    public static void remove(UserClientDto userClientDto) {
+    public static void remove(RequestInfo userClientDto) {
         // 确保原子性
         synchronized(removeLocker) {
 
@@ -114,7 +120,7 @@ public class UserChannelRepository {
         }
     }
 
-    private static void removeSession(UserClientDto userInfo) {
+    private static void removeSession(RequestInfo userInfo) {
         String key = userInfo.getAppId() + WebConstants.RedisConstants.UserSessionConstants + userInfo.getUserId();
         String field = userInfo.getClientType() + ":" + userInfo.getImei();
         RedisUtils.hdel(key, field);
@@ -125,7 +131,7 @@ public class UserChannelRepository {
      * LoginStatusMap 和 channelGroup 中均能找得到对应的 channel 说明用户在线
      * @return      在线就返回对应的channel，不在线返回null
      */
-    public static Channel isBind(UserClientDto userClientDto) {
+    public static Channel isBind(RequestInfo userClientDto) {
         Channel channel = USER_CHANNEL.get(userClientDto);
         if (ObjectUtils.isEmpty(channel)) {
             return null;
@@ -134,16 +140,16 @@ public class UserChannelRepository {
     }
 
     public static boolean isBind(Channel channel) {
-        UserClientDto userInfo = getUserInfo(channel);
+        RequestInfo userInfo = getUserInfo(channel);
         return !ObjectUtils.isEmpty(userInfo) &&
                 !ObjectUtils.isEmpty(USER_CHANNEL.get(userInfo));
     }
 
-    public static void forceOffLine(UserClientDto userClientDto) {
-        Channel channel = isBind(userClientDto);
+    public static void forceOffLine(RequestInfo requestInfo) {
+        Channel channel = isBind(requestInfo);
         if (ObjectUtils.isEmpty(channel)) {
-            String mapKey = userClientDto.getAppId() + WebConstants.RedisConstants.UserSessionConstants + userClientDto.getUserId();
-            String fieldKey = userClientDto.getClientType() + ":" + userClientDto.getImei();
+            String mapKey = requestInfo.getAppId() + WebConstants.RedisConstants.UserSessionConstants + requestInfo.getUserId();
+            String fieldKey = requestInfo.getClientType() + ":" + requestInfo.getImei();
             String userSessionValue = (String) RedisUtils.hget(mapKey, fieldKey);
 
             if (!StringUtils.isBlank(userSessionValue)) {
@@ -152,12 +158,12 @@ public class UserChannelRepository {
                 RedisUtils.hset(mapKey, fieldKey, JsonUtils.toStr(userSession));
             }
             // 移除通道。服务端单方面关闭连接。前端心跳会发送失败
-            remove(userClientDto);
+            remove(requestInfo);
         }
     }
 
     public static void forceOffLine(Channel channel) {
-        UserClientDto userInfo = getUserInfo(channel);
+        RequestInfo userInfo = getUserInfo(channel);
         try {
             forceOffLine(userInfo);
         } catch (Exception e) {
@@ -172,11 +178,11 @@ public class UserChannelRepository {
      * @return
      */
     public static List<Channel> getUserChannels(Integer appId, String userId) {
-        Set<UserClientDto> channelInfos = USER_CHANNEL.keySet();
+        Set<RequestInfo> channelInfos = USER_CHANNEL.keySet();
         List<Channel> channels = new ArrayList<>();
 
         channelInfos.forEach(channel -> {
-            if (appId.equals(channel.getAppId()) && userId.equals(channel.getUserId())) {
+            if (appId.equals(channel.getAppId()) && userId.equals(channel.getUserId().toString())) {
                 channels.add(USER_CHANNEL.get(channel));
             }
         });
@@ -184,8 +190,8 @@ public class UserChannelRepository {
     }
 
     public static Channel getUserChannel(Integer appId, String userId, Integer clientType, String imei) {
-        UserClientDto dto = new UserClientDto();
-        dto.setUserId(userId);
+        RequestInfo dto = new RequestInfo();
+        dto.setUserId(Long.valueOf(userId));
         dto.setAppId(appId);
         dto.setClientType(clientType);
         dto.setImei(imei);
@@ -202,7 +208,7 @@ public class UserChannelRepository {
             log.info(channel.id().asLongText());
         }
         log.info("userId -> channel 的映射：");
-        for (Map.Entry<UserClientDto, Channel> entry : USER_CHANNEL.entrySet()) {
+        for (Map.Entry<RequestInfo, Channel> entry : USER_CHANNEL.entrySet()) {
             log.info("userId: {} ---> channelId: {}", entry.getKey(), entry.getValue().id().asLongText());
         }
     }

@@ -33,9 +33,19 @@
         <!-- 公共模块 -->
         <dependency>
             <groupId>com.luna</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.luna</groupId>
+            <artifactId>common-cache</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.luna</groupId>
+            <artifactId>common-data</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.luna</groupId>
             <artifactId>im-tcp-api</artifactId>

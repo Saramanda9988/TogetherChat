@@ -46,6 +46,40 @@ public class RedisKey {
 
     /** 通话会话锁 */
     public static final String CALL_SESSION_LOCK = "callSessionLock:sid_%d:uid_%d";
+    
+    /** 
+     * 访问token键 
+     * 格式: accessToken:userId:uuid
+     */
+    public static final String ACCESS_TOKEN_KEY = "accessToken:%d:%s";
+    
+    /** 
+     * 刷新token键 
+     * 格式: refreshToken:userId:uuid
+     */
+    public static final String REFRESH_TOKEN_KEY = "refreshToken:%d:%s";
+    
+    /** 
+     * 用户token集合键 
+     * 格式: userTokens:userId
+     */
+    public static final String USER_TOKEN_SET_KEY = "userTokens:%d";
+    
+    /** 
+     * token黑名单键 
+     * 格式: tokenBlacklist:token
+     */
+    public static final String TOKEN_BLACKLIST_KEY = "tokenBlacklist:%s";
+    
+    /** 
+     * 访问token过期时间 (30分钟) 
+     */
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
+    
+    /** 
+     * 刷新token过期时间 (7天) 
+     */
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
 
     public static String getKey(String key, Object... objects) {
         return BASE_KEY + String.format(key, objects);

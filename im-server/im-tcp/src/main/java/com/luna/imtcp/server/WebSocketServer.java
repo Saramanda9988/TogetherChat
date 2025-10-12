@@ -3,6 +3,7 @@ package com.luna.imtcp.server;
 import com.luna.imtcp.handler.MessageDecoderHandler;
 import com.luna.imtcp.handler.MessageEncoderHandler;
 import com.luna.imtcp.handler.NettyWebSocketServerHandler;
+import com.luna.imtcp.handler.WebSocketHeaderHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -56,6 +57,8 @@ public class WebSocketServer {
                         pipeline.addLast(new ChunkedWriteHandler());
                         // http数据在传输过程中是分段的，要用HttpObjectAggregator来聚合
                         pipeline.addLast(new HttpObjectAggregator(8192));
+                        // 添加WebSocket Token提取处理器
+                        pipeline.addLast(new WebSocketHeaderHandler());
                         //保存用户ip
 
                         /**
@@ -67,8 +70,8 @@ public class WebSocketServer {
                          *      是通过一个状态码 101 来切换的
                          */
 
-                        // 建立websocket的操作
-                        pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
+                        // 建立websocket的操作 - 支持token参数
+                        pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true, 65536, false, true));
                         pipeline.addLast(new MessageDecoderHandler());
                         pipeline.addLast(new MessageEncoderHandler());
                         pipeline.addLast(new NettyWebSocketServerHandler());

@@ -104,12 +104,35 @@ public class JwtUtils {
                 Const.IMEI_KEY, user.getImei(),
                 Const.CLIENT_TYPE_KEY, user.getClientType()
         );
-        // 生成jwt token
+        // 生成jwt access token
         return Jwts.builder()
                 .addClaims(userInfoMap)
                 .setIssuedAt(new Date())
                 .setIssuer(Const.ISS)
                 .setExpiration(new Date(System.currentTimeMillis() + Const.ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(Const.KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * 生成刷新 Token
+     *
+     * @param user 用户信息
+     * @return 刷新 Token(不携带Bearer)
+     */
+    public static String generateRefreshToken(RequestInfo user) {
+        Map<String, Object> userInfoMap = Map.of(
+                Const.USER_ID_KEY, user.getUserId(),
+                Const.USER_NAME_KEY, user.getUsername(),
+                Const.IMEI_KEY, user.getImei(),
+                Const.CLIENT_TYPE_KEY, user.getClientType()
+        );
+        // 生成jwt refresh token
+        return Jwts.builder()
+                .addClaims(userInfoMap)
+                .setIssuedAt(new Date())
+                .setIssuer(Const.ISS)
+                .setExpiration(new Date(System.currentTimeMillis() + Const.REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(Const.KEY, SignatureAlgorithm.HS256)
                 .compact();
     }

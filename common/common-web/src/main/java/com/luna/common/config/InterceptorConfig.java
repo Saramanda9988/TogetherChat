@@ -2,6 +2,7 @@ package com.luna.common.config;
 
 
 import com.luna.common.interceptor.CollectorInterceptor;
+import com.luna.common.interceptor.UserContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
