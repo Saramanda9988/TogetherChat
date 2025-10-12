@@ -1,12 +1,9 @@
 package com.luna.gatewayserver.interceptor;
 
-import com.luna.common.annotation.PublicAPI;
 import com.luna.common.constant.RedisKey;
 import com.luna.common.domain.dto.RequestInfo;
 import com.luna.common.utils.JwtUtils;
 import com.luna.common.utils.RedisUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -16,14 +13,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.servlet.HandlerInterceptor;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 改进版的Token拦截器，使用注解方式标记公共API

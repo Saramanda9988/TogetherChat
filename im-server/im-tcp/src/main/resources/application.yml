@@ -84,22 +84,6 @@ dubbo:
     loadbalance: roundrobin
     group: user-service
 
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/**Mapper.xml #扫描xml文件
-  global-config:
-    db-config:
-      # 指定数据库中主键的生成方式，auto 表示数据库中主键的生成方式为自动生成，通常使用数据库的自增功能。
-      # 不加的话，生成的 id 过大，会导致前端溢出
-      id-type: auto
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#    logic-delete-field: deleted # 全局逻辑删除的实体字段名
-#    logic-delete-value: 1 # 逻辑已删除值(默认为 1)
-#    logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
-    map-underscore-to-camel-case: true
-    #NONE 取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。 FULL 会自动映射任意复杂的结果集（无论是否嵌套）
-    auto-mapping-behavior: FULL
-
 resilience4j:
   retry: # 重试器
     instances:

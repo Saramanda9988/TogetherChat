@@ -31,6 +31,8 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
+
+
         <!-- 服务注册发现 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -1,6 +1,5 @@
 package com.luna.common.domain.vo.request;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -19,10 +18,6 @@ public class CursorPageBaseRequest {
     
     @Schema(description = "每页大小")
     private Integer pageSize = 10;
-
-    public Page plusPage() {
-        return new Page(1, this.pageSize, false);
-    }
 
     @JsonIgnore
     public Boolean isFirstPage() {

@@ -4,21 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * Description: 房间状态枚举
- */
 @AllArgsConstructor
 @Getter
-public enum RoomStatusEnum {
-    ACTIVE(0, "正常"),
-    DELETED(1, "删除"),
-    GROUP(3, "群组"),
-    CHAT(4, "单聊"),
-    CREATE(5, "创建"),
+public enum MemberTypeEnum {
+    LEADER(1, "群主"),
+    MANAGER(2, "群成员"),
+    MEMBER(3, "管理员"),
     ;
 
     private final Integer type;
