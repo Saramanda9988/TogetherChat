@@ -2,6 +2,7 @@ package com.luna.imtcp.handler;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONUtil;
 import com.luna.common.domain.dto.RequestInfo;
 import com.luna.common.utils.JwtUtils;
 import com.luna.imtcp.api.vo.MessageHeader;
@@ -12,6 +13,7 @@ import com.luna.imtcp.utils.UserChannelUtils;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -40,6 +42,12 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Web
         MessageHeader messageHeader = webMessage.getMessageHeader();
         Integer command = messageHeader.getCommand();
         log.info("Received WebSocket message: command={}, brokerId={}", command, brokerId);
+        if (Objects.isNull(command)) {
+            log.warn("Invalid message: missing command. Closing connection. messageHeader={}", JSONUtil.toJsonStr(messageHeader));
+            ctx.channel().close();
+            return;
+        }
+        commandProcessor.handleCommand(command, webMessage, ctx);
     }
 
     @Override
@@ -103,5 +111,12 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Web
                     requestInfo.getUserId(), requestInfo.getAppId(), requestInfo.getClientType(), requestInfo.getImei());
         }
         super.userEventTriggered(ctx, evt);
+    }
+
+    // 处理异常
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.warn("异常发生，异常消息:", cause);
+        ctx.channel().close();
     }
 }

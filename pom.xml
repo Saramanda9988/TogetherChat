@@ -22,8 +22,10 @@
         <module>gateway-server</module>
         <module>auth-server</module>
         <module>user-server</module>
-        <module>room-server</module>
         <module>im-server</module>
+        <module>message-server</module>
+        <module>id-server</module>
+        <module>conversation-server</module>
     </modules>
     <!--    <description>TogetherChat</description>-->
     <url/>
