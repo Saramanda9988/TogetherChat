@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 })
 @EnableDubbo
 @DubboComponentScan
-@MapperScan("com.luna.idserver.generator.mapper") // 扫描房间服务的Mapper接口
 public class IdGenerateServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(IdGenerateServerApplication.class, args);

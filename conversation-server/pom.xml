@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>conversation-server</artifactId>
-    <name>group-server</name>
+    <name>conversation-server</name>
     <description>Chat Group Server Parent Module for TogetherChat Microservices</description>
     <packaging>pom</packaging>
 

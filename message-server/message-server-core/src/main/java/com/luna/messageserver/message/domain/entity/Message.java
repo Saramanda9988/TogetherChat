@@ -7,16 +7,17 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author LunaRain_079
  * @since 2025-10-12
  */
-@Getter
-@Setter
+@Data
+@Builder
 @TableName("message")
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(name = "Message", description = "消息落库类")
 public class Message implements Serializable {
 
