@@ -25,7 +25,7 @@ public class MessageResponse {
     private Integer syncId;
 
     @Schema(description = "消息属于的群组/会话ID")
-    private Long groupId;
+    private Long conversationId;
 
     @Schema(description = "发送者用户ID")
     private Long userId;

@@ -92,13 +92,6 @@ public class MessageService {
     }
 
     /**
-     * 获取最大的syncId
-     */
-    public Integer getMaxSyncId() {
-        return messageDao.getMaxSyncId();
-    }
-
-    /**
      * 获取最大的messageId
      */
     public Long getMaxMessageId() {
@@ -115,11 +108,11 @@ public class MessageService {
         
         boolean result = messageDao.saveMessage(message);
         if (result) {
-            log.info("保存消息成功, messageId: {}, groupId: {}, userId: {}", 
-                    message.getMessageId(), message.getGroupId(), message.getUserId());
+            log.info("保存消息成功, messageId: {}, conversationId: {}, userId: {}",
+                    message.getMessageId(), message.getConversationId(), message.getUserId());
         } else {
-            log.error("保存消息失败, messageId: {}, groupId: {}, userId: {}", 
-                    message.getMessageId(), message.getGroupId(), message.getUserId());
+            log.error("保存消息失败, messageId: {}, conversationId: {}, userId: {}",
+                    message.getMessageId(), message.getConversationId(), message.getUserId());
         }
         
         return result;
@@ -132,7 +125,7 @@ public class MessageService {
         return MessageResponse.builder()
                 .messageId(message.getMessageId())
                 .syncId(message.getSyncId())
-                .groupId(message.getGroupId())
+                .conversationId(message.getConversationId())
                 .userId(message.getUserId())
                 .status(message.getStatus())
                 .messageType(message.getMessageType())

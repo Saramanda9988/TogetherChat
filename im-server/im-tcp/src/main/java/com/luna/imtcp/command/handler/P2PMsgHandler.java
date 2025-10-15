@@ -17,8 +17,6 @@ public class P2PMsgHandler implements CommandHandler {
     public void handle(WebMessage message) {
         log.info("P2PMsgHandler收到消息: {}", message);
         P2PMessageBody singleMsg = JsonUtils.toObj(message.getMessagePack(), P2PMessageBody.class);
-        RedisUtils.
-        MessageVOBody messageVOBody = MessageVOBody.builder().build();
     }
 
     @Override

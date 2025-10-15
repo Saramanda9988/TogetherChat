@@ -54,4 +54,10 @@ public interface ConversationDubboService {
      * @return 角色类型：0=单聊，1=成员，2=管理员，3=群主
      */
     Integer getUserRole(Long conversationId, Long userId);
+
+    /**
+     * 获取所有会话ID
+     * @return
+     */
+    List<Long> getAllConversationIds();
 }

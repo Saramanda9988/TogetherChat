@@ -32,8 +32,8 @@ public class Message implements Serializable {
     private Integer syncId;
 
     @Schema(description = "消息属于的房间号")
-    @TableField("group_id")
-    private Long groupId;
+    @TableField("conversation_id")
+    private Long conversationId;
 
     @Schema(description = "用户id")
     @TableField("user_id")

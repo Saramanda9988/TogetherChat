@@ -8,17 +8,12 @@ public interface IdGenerator {
     /**
      * 生成群聊消息ID
      */
-    Long generateGroupMessageId();
-
-    /**
-     * 生成私聊消息ID
-     */
-    Long generateP2PMessageId();
+    Long generateMessageId() throws RuntimeException;
 
     /**
      * 生成对话同步ID
      */
-    Long generateRoomSyncId(Long groupId);
+    Long generateConversationSyncId(Long conversationId) throws RuntimeException;
 
     /**
      * 生成雪花id

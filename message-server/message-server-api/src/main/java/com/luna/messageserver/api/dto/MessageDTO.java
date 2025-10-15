@@ -20,7 +20,7 @@ public class MessageDTO implements Serializable {
 
     private Long messageId;
     private Integer syncId;
-    private Long groupId;
+    private Long conversationId;
     private Long userId;
     private Integer status;
     private Integer messageType;

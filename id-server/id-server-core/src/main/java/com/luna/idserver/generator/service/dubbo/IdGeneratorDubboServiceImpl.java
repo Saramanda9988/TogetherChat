@@ -1,6 +1,7 @@
 package com.luna.idserver.generator.service.dubbo;
 
 import com.luna.idserver.api.service.IdGenerator;
+import com.luna.idserver.generator.service.IdCache;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -13,30 +14,24 @@ import org.springframework.stereotype.Service;
 @DubboService(interfaceClass = IdGenerator.class) //TODO: 或许不需要进行分组
 @Service
 public class IdGeneratorDubboServiceImpl implements IdGenerator {
-    /**
-     * 生成群聊消息ID
-     */
-    @Override
-    public Long generateGroupMessageId() {
-        return 0L;
-    }
+    private final IdCache idCache;
 
     /**
-     * 生成私聊消息ID
+     * 生成消息ID
      */
     @Override
-    public Long generateP2PMessageId() {
-        return 0L;
+    public Long generateMessageId() throws RuntimeException {
+        return idCache.getNextMessageId();
     }
 
     /**
      * 生成对话同步ID
      *
-     * @param groupId
+     * @param conversationId
      */
     @Override
-    public Long generateRoomSyncId(Long groupId) {
-        return 0L;
+    public Long generateConversationSyncId(Long conversationId) throws RuntimeException {
+        return idCache.getNextSyncId(conversationId);
     }
 
     /**
@@ -44,6 +39,7 @@ public class IdGeneratorDubboServiceImpl implements IdGenerator {
      */
     @Override
     public String generateSnowflakeId() {
+        // TODO: 实现主键使用雪花算法生成
         return "";
     }
 }

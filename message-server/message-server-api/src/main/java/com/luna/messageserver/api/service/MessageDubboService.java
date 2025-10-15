@@ -2,6 +2,8 @@ package com.luna.messageserver.api.service;
 
 import com.luna.messageserver.api.dto.MessageDTO;
 
+import java.util.Map;
+
 /**
  * 消息服务Dubbo接口定义
  * 提供消息相关的远程调用服务
@@ -9,16 +11,16 @@ import com.luna.messageserver.api.dto.MessageDTO;
 public interface MessageDubboService {
 
     /**
-     * 获取message表中最大的syncId
-     * @return 最大的syncId
-     */
-    Integer getMaxSyncId();
-
-    /**
      * 获取message表中最大的messageId
      * @return 最大的messageId
      */
     Long getMaxMessageId();
+
+    /**
+     * 获取每个会话的最大syncId
+     * @return conversationId -> syncId的映射
+     */
+    Map<Long, Integer> getMaxSyncIds();
 
     /**
      * 保存消息到message表中

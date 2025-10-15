@@ -109,6 +109,19 @@ public class ConversationDubboServiceImpl implements ConversationDubboService {
     }
 
     /**
+     * 获取所有会话ID
+     *
+     * @return
+     */
+    @Override
+    public List<Long> getAllConversationIds() {
+        return conversationDao.getAllConversationIds()
+                .stream()
+                .map(Conversation::getConversationId)
+                .toList();
+    }
+
+    /**
      * 转换为ConversationDTO
      */
     private ConversationDTO convertToDTO(Conversation conversation) {

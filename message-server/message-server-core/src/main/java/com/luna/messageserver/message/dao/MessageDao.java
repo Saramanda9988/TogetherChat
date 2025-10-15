@@ -1,12 +1,15 @@
 package com.luna.messageserver.message.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luna.messageserver.message.domain.entity.Message;
 import com.luna.messageserver.message.mapper.MessageMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageDao extends ServiceImpl<MessageMapper, Message> {
@@ -39,12 +42,16 @@ public class MessageDao extends ServiceImpl<MessageMapper, Message> {
     /**
      * 获取最大的syncId
      */
-    public Integer getMaxSyncId() {
-        Message maxSyncMessage = lambdaQuery()
-                .orderByDesc(Message::getSyncId)
-                .last("LIMIT 1")
-                .one();
-        return maxSyncMessage != null ? maxSyncMessage.getSyncId() : 0;
+    public Map<Long, Integer> getMaxSyncIds(List<Long> conversationIds) {
+        if (conversationIds == null || conversationIds.isEmpty()) {
+            return Map.of();
+        }
+        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("conversation_id", "MAX(sync_id) as sync_id").groupBy("room_id")
+                .in("conversation_id", conversationIds);
+        return this.list(queryWrapper)
+            .stream()
+            .collect(Collectors.toMap(Message::getConversationId, Message::getSyncId));
     }
 
     /**
@@ -68,9 +75,9 @@ public class MessageDao extends ServiceImpl<MessageMapper, Message> {
     /**
      * 根据会话ID统计消息数量
      */
-    public Long countByGroupId(Long groupId) {
+    public Long countByConversationId(Long conversationId) {
         return lambdaQuery()
-                .eq(Message::getGroupId, groupId)
+                .eq(Message::getConversationId, conversationId)
                 .count();
     }
 }

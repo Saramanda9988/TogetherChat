@@ -61,4 +61,11 @@ public class ConversationDao extends ServiceImpl<ConversationMapper, Conversatio
                 .set(Conversation::getStatus, status)
                 .update();
     }
+
+    public List<Conversation> getAllConversationIds() {
+        return lambdaQuery()
+                .eq(Conversation::getStatus, 0)
+                .select(Conversation::getConversationId)
+                .list();
+    }
 }

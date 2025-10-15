@@ -1,14 +1,19 @@
 package com.luna.messageserver.message.service.dubbo;
 
+import com.luna.conversationserver.api.service.ConversationDubboService;
 import com.luna.messageserver.api.dto.MessageDTO;
 import com.luna.messageserver.api.service.MessageDubboService;
 import com.luna.messageserver.message.dao.MessageDao;
 import com.luna.messageserver.message.domain.entity.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 消息服务Dubbo实现类
@@ -24,17 +29,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageDubboServiceImpl implements MessageDubboService {
 
-    private final MessageDao messageDao;
+    @DubboReference(group = "conversation-service")
+    private ConversationDubboService conversationDubboService;
 
-    /**
-     * 获取message表中最大的syncId
-     */
-    @Override
-    public Integer getMaxSyncId() {
-        Integer maxSyncId = messageDao.getMaxSyncId();
-        log.debug("获取最大syncId: {}", maxSyncId);
-        return maxSyncId;
-    }
+    private final MessageDao messageDao;
 
     /**
      * 获取message表中最大的messageId
@@ -44,6 +42,17 @@ public class MessageDubboServiceImpl implements MessageDubboService {
         Long maxMessageId = messageDao.getMaxMessageId();
         log.debug("获取最大messageId: {}", maxMessageId);
         return maxMessageId;
+    }
+
+    /**
+     * 获取每个会话的最大syncId
+     *
+     * @return conversationId -> syncId的映射
+     */
+    @Override
+    public Map<Long, Integer> getMaxSyncIds() {
+        List<Long> allConversationIds = conversationDubboService.getAllConversationIds();
+        return messageDao.getMaxSyncIds(allConversationIds);
     }
 
     /**
@@ -60,11 +69,11 @@ public class MessageDubboServiceImpl implements MessageDubboService {
         boolean result = messageDao.saveMessage(message);
         
         if (result) {
-            log.info("Dubbo保存消息成功: messageId={}, groupId={}, userId={}", 
-                    message.getMessageId(), message.getGroupId(), message.getUserId());
+            log.info("Dubbo保存消息成功: messageId={}, conversationId={}, userId={}",
+                    message.getMessageId(), message.getConversationId(), message.getUserId());
         } else {
-            log.error("Dubbo保存消息失败: messageId={}, groupId={}, userId={}", 
-                    message.getMessageId(), message.getGroupId(), message.getUserId());
+            log.error("Dubbo保存消息失败: messageId={}, conversationId={}, userId={}",
+                    message.getMessageId(), message.getConversationId(), message.getUserId());
         }
         
         return result;
@@ -99,7 +108,7 @@ public class MessageDubboServiceImpl implements MessageDubboService {
             return 0L;
         }
 
-        Long count = messageDao.countByGroupId(groupId);
+        Long count = messageDao.countByConversationId(groupId);
         log.debug("群组 {} 的消息数量: {}", groupId, count);
         return count;
     }
@@ -111,7 +120,7 @@ public class MessageDubboServiceImpl implements MessageDubboService {
         return Message.builder()
                 .messageId(dto.getMessageId())
                 .syncId(dto.getSyncId())
-                .groupId(dto.getGroupId())
+                .conversationId(dto.getConversationId())
                 .userId(dto.getUserId())
                 .status(dto.getStatus())
                 .messageType(dto.getMessageType())
@@ -129,7 +138,7 @@ public class MessageDubboServiceImpl implements MessageDubboService {
         return MessageDTO.builder()
                 .messageId(entity.getMessageId())
                 .syncId(entity.getSyncId())
-                .groupId(entity.getGroupId())
+                .conversationId(entity.getConversationId())
                 .userId(entity.getUserId())
                 .status(entity.getStatus())
                 .messageType(entity.getMessageType())
