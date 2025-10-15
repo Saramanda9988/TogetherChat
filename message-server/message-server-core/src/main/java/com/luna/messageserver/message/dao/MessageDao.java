@@ -17,9 +17,9 @@ public class MessageDao extends ServiceImpl<MessageMapper, Message> {
     /**
      * 根据会话ID获取历史消息（分页）
      */
-    public List<Message> getHistoryMessages(Long groupId, Long cursor, Integer pageSize) {
+    public List<Message> getHistoryMessages(Long conversationId, Long cursor, Integer pageSize) {
         LambdaQueryWrapper<Message> wrapper = new LambdaQueryWrapper<Message>()
-                .eq(Message::getGroupId, groupId)
+                .eq(Message::getConversationId, conversationId)
                 .orderByDesc(Message::getMessageId)
                 .last("LIMIT " + pageSize);
         
