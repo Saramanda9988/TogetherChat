@@ -73,7 +73,7 @@ dubbo:
     logger: slf4j
   protocol:
     name: dubbo
-    port: 50053
+    port: 50059
   registry:
     address: nacos://localhost:8848
     username: nacos

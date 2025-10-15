@@ -1,7 +1,7 @@
 server:
   tomcat:
     max-connections: 10000
-  port: ${roomserver.port}
+  port: ${conversationserver.port}
   address: 0.0.0.0
 logging:
   level:
@@ -17,7 +17,7 @@ spring:
       discovery:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
-        port: ${roomserver.port}
+        port: ${conversationserver.port}
       config:
         server-addr: localhost:8848
         group: DEFAULT_GROUP
@@ -36,21 +36,21 @@ spring:
         max-retries-on-next-service-instance: 1
         retry-on-all-operations: false
   rabbitmq:
-    host: ${roomserver.rabbitmq.host}
-    port: ${roomserver.rabbitmq.port}
-    username: ${roomserver.rabbitmq.username}
-    password: ${roomserver.rabbitmq.password}
+    host: ${conversationserver.rabbitmq.host}
+    port: ${conversationserver.rabbitmq.port}
+    username: ${conversationserver.rabbitmq.username}
+    password: ${conversationserver.rabbitmq.password}
   datasource:
-    url: jdbc:mysql://${roomserver.mysql.ip}:${roomserver.mysql.port}/${roomserver.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: ${roomserver.mysql.username}
-    password: ${roomserver.mysql.password}
+    url: jdbc:mysql://${conversationserver.mysql.ip}:${conversationserver.mysql.port}/${conversationserver.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ${conversationserver.mysql.username}
+    password: ${conversationserver.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
       # Redis服务器地址
-      host: ${roomserver.redis.host}
+      host: ${conversationserver.redis.host}
       # Redis服务器端口号
-      port: ${roomserver.redis.port}
+      port: ${conversationserver.redis.port}
       # 使用的数据库索引，默认是0
       database: 0
       # 连接超时时间

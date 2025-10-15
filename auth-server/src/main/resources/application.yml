@@ -1,7 +1,7 @@
 server:
   tomcat:
     max-connections: 10000
-  port: 8091 #自定义端口号
+  port: ${authserver.port}
   address: 0.0.0.0
 
 spring:
