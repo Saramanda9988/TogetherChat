@@ -15,7 +15,9 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class UserChannelUtils {
+
     private static final ChannelGroup CHANNEL_GROUP = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private static final Map<RequestInfo, Channel> USER_CHANNEL = new ConcurrentHashMap<>();
     private static final Object bindLocker = new Object();
@@ -121,7 +124,7 @@ public class UserChannelUtils {
     }
 
     private static void removeSession(RequestInfo userInfo) {
-        String key = userInfo.getAppId() + WebConstants.RedisConstants.UserSessionConstants + userInfo.getUserId();
+        String key = userInfo.getAppId() + WebConstants.UserSessionConstants + userInfo.getUserId();
         String field = userInfo.getClientType() + ":" + userInfo.getImei();
         RedisUtils.hdel(key, field);
     }
@@ -148,7 +151,7 @@ public class UserChannelUtils {
     public static void forceOffLine(RequestInfo requestInfo) {
         Channel channel = isBind(requestInfo);
         if (ObjectUtils.isEmpty(channel)) {
-            String mapKey = requestInfo.getAppId() + WebConstants.RedisConstants.UserSessionConstants + requestInfo.getUserId();
+            String mapKey = requestInfo.getAppId() + WebConstants.UserSessionConstants + requestInfo.getUserId();
             String fieldKey = requestInfo.getClientType() + ":" + requestInfo.getImei();
             String userSessionValue = (String) RedisUtils.hget(mapKey, fieldKey);
 
@@ -189,9 +192,9 @@ public class UserChannelUtils {
         return channels;
     }
 
-    public static Channel getUserChannel(Integer appId, String userId, Integer clientType, String imei) {
+    public static Channel getUserChannel(Integer appId, Long userId, Integer clientType, String imei) {
         RequestInfo dto = new RequestInfo();
-        dto.setUserId(Long.valueOf(userId));
+        dto.setUserId(userId);
         dto.setAppId(appId);
         dto.setClientType(clientType);
         dto.setImei(imei);

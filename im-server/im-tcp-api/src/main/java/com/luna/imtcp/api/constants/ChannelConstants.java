@@ -13,10 +13,6 @@ public class ChannelConstants {
      * channel 绑定的端类型
      */
     public static final String ClientType = "clientType";
-    /**
-     * channel 绑定的读写时间
-     */
-    public static final String ReadTime = "readTime";
 
     /**
      * channel 绑定的 imei 号，标识用户登录设备号

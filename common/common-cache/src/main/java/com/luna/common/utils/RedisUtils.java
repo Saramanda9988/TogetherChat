@@ -1,7 +1,6 @@
 package com.luna.common.utils;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.luna.common.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -379,7 +378,17 @@ public class RedisUtils {
      */
     public static Map<Object, Object> hmget(String key) {
         return stringRedisTemplate.opsForHash().entries(key);
+    }
 
+    /**
+     * 获取hashKey对应的所有键值（String类型）
+     *
+     * @param key 键
+     * @return 对应的多个键值
+     */
+    public static Map<String, String> hgetAll(String key) {
+        HashOperations<String, String, String> ops = stringRedisTemplate.opsForHash();
+        return ops.entries(key);
     }
 
     /**

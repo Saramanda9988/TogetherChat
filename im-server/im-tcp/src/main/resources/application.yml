@@ -73,7 +73,7 @@ dubbo:
     logger: slf4j
   protocol:
     name: dubbo
-    port: 50059
+    port: ${imtcpserver.dubbo.port}
   registry:
     address: nacos://localhost:8848
     username: nacos

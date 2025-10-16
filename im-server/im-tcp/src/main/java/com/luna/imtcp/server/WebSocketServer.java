@@ -24,12 +24,15 @@ import io.netty.util.concurrent.Future;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
 public class WebSocketServer {
-    public static final int WEB_SOCKET_PORT = 8999;
+
+    @Value("${imtcpserver.websocket.port}")
+    public int WEB_SOCKET_PORT;
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup(NettyRuntime.availableProcessors());

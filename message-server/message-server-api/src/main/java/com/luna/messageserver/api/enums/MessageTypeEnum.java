@@ -1,4 +1,4 @@
-package com.luna.messageserver.message.enums;
+package com.luna.messageserver.api.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum MessageTypeEnum {
+    ACK(0, "收到消息"),
     TEXT(1, "文本消息"),
     IMAGE(2, "图片消息"),
-    FILE(3, "文件消息"),
-    VOICE(4, "语音消息"),
-    VIDEO(5, "视频消息");
+    FILE(3, "文件消息"),;
 
     private final Integer type;
     private final String description;

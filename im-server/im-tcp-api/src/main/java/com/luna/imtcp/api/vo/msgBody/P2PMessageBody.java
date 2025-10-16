@@ -12,9 +12,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class P2PMessageBody implements Serializable {
+    private String tempMessageId;
+
     private Long fromId;
 
-    private Long groupId;
+    private Long conversationId;
 
     private Long toId;
 
@@ -23,4 +25,6 @@ public class P2PMessageBody implements Serializable {
     private String content;
 
     private String replyMessage;
+
+    private Integer messageType;
 }

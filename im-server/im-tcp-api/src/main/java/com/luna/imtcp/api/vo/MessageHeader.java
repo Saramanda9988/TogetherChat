@@ -45,7 +45,7 @@ public class MessageHeader {
     /**
      * 4字节 包体长度
      */
-    private int length;
+    private Integer length;
 
     /**
      * imei号

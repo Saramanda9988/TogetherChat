@@ -4,7 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.luna.common.domain.dto.RequestInfo;
+import com.luna.common.utils.JsonUtils;
 import com.luna.common.utils.JwtUtils;
+import com.luna.common.utils.RedisUtils;
+import com.luna.imtcp.api.constants.WebConstants;
+import com.luna.imtcp.api.enums.ConnectStateEnums;
+import com.luna.imtcp.api.user.UserSession;
 import com.luna.imtcp.api.vo.MessageHeader;
 import com.luna.imtcp.api.vo.WebMessage;
 import com.luna.imtcp.command.CommandProcessor;
@@ -20,6 +25,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -28,6 +34,15 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Web
 
     @Value("${imtcpserver.config.broker-id}")
     private Integer brokerId;
+
+    @Value("${imtcpserver.websocket.port}")
+    public String WEB_SOCKET_PORT;
+
+    @Value("${imtcpserver.dubbo.port}")
+    public String DUBBO_PORT;
+
+    // FIXME: 需要改为获取真实的服务器IP
+    private final static String brokerIp = "127.0.0.1";
 
     private CommandProcessor commandProcessor;
 
@@ -109,6 +124,31 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Web
             UserChannelUtils.bind(requestInfo, ctx.channel());
             log.info("用户WebSocket连接成功: userId={}, appId={}, clientType={}, imei={}",
                     requestInfo.getUserId(), requestInfo.getAppId(), requestInfo.getClientType(), requestInfo.getImei());
+
+            // 构建UserSession
+            UserSession userSession = UserSession.builder()
+                    .userId(requestInfo.getUserId())
+                    .appId(requestInfo.getAppId())
+                    .clientType(requestInfo.getClientType())
+                    .imei(requestInfo.getImei())
+                    .connectState(ConnectStateEnums.CONNECTED.getCode())
+                    .brokerIp(brokerIp)
+                    .brokerPort(WEB_SOCKET_PORT)
+                    .brokerRpcPort(DUBBO_PORT)
+                    .brokerId(brokerId)
+                    .build();
+
+            // Redis Key: appId:userSession:userId
+            String mapKey = requestInfo.getAppId() + WebConstants.UserSessionConstants + requestInfo.getUserId();
+            // Field Key: clientType:imei
+            String fieldKey = requestInfo.getClientType() + ":" + requestInfo.getImei();
+
+            // 存储到Redis
+            RedisUtils.hset(mapKey, fieldKey, JsonUtils.toStr(userSession));
+
+            log.info("用户会话信息已上传到Redis: userId={}, appId={}, clientType={}, imei={}, server={}:{}",
+                    requestInfo.getUserId(), requestInfo.getAppId(), requestInfo.getClientType(),
+                    requestInfo.getImei(), brokerIp, DUBBO_PORT);
         }
         super.userEventTriggered(ctx, evt);
     }

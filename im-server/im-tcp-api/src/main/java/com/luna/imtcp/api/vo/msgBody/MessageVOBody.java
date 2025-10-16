@@ -16,7 +16,7 @@ public class MessageVOBody {
 
     private Integer syncId;
 
-    private Long groupId;
+    private Long conversationId;
 
     private Long userId;
 

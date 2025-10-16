@@ -16,10 +16,6 @@ public class MQProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void sendMsg(String exchange, Object body) {
-        rabbitTemplate.convertAndSend(exchange,"order", body);
-    }
-
     public void sendDbChange(String exchange, Object body) {
         rabbitTemplate.convertAndSend(exchange, MQConstant.MESSAGE_CHANGE_KEY, body);
     }

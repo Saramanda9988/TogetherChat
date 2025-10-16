@@ -12,6 +12,7 @@ public interface MQConstant {
      */
     String PUSH_EXCHANGE = "websocket.push.exchange";
     String PUSH_QUEUE = "websocket.push.queue";
+    String PUSH_KEY = "websocket.push";
 
     /**
      * flink交换机

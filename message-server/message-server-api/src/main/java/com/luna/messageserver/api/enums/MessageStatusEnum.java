@@ -1,4 +1,4 @@
-package com.luna.messageserver.message.enums;
+package com.luna.messageserver.api.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
