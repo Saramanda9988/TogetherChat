@@ -1,7 +1,6 @@
 package com.luna.imtcp.service.dubbo;
 
 import com.luna.imtcp.api.service.ImPushService;
-import com.luna.imtcp.api.vo.msgBody.MessageVOBody;
 import com.luna.imtcp.utils.MessagePushUtils;
 import com.luna.imtcp.utils.UserChannelUtils;
 import com.luna.messageserver.api.dto.MessageDTO;

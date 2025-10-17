@@ -9,7 +9,6 @@ import com.luna.idserver.api.service.IdGenerator;
 import com.luna.imtcp.api.constants.WebConstants;
 import com.luna.imtcp.api.enums.CommandType;
 import com.luna.imtcp.api.vo.WebMessage;
-import com.luna.imtcp.api.vo.msgBody.MessageVOBody;
 import com.luna.imtcp.api.vo.msgBody.P2PMessageBody;
 import com.luna.imtcp.command.CommandHandler;
 import com.luna.imtcp.service.PushService;

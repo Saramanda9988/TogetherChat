@@ -4,7 +4,6 @@ import com.luna.common.utils.JsonUtils;
 import com.luna.imtcp.api.enums.CommandType;
 import com.luna.imtcp.api.vo.MessageHeader;
 import com.luna.imtcp.api.vo.WebMessage;
-import com.luna.imtcp.api.vo.msgBody.MessageVOBody;
 import com.luna.messageserver.api.dto.MessageDTO;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;

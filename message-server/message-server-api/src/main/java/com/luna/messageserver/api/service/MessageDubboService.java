@@ -42,4 +42,12 @@ public interface MessageDubboService {
      * @return 消息数量
      */
     Long countMessagesByGroupId(Long groupId);
+
+    /**
+     * 更新消息状态
+     * @param messageId 消息ID
+     * @param status 新状态
+     * @return 是否更新成功
+     */
+    boolean updateMessageStatus(Long messageId, Integer status);
 }

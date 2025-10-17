@@ -1,6 +1,5 @@
 package com.luna.imtcp.api.service;
 
-import com.luna.imtcp.api.vo.msgBody.MessageVOBody;
 import com.luna.messageserver.api.dto.MessageDTO;
 
 /**

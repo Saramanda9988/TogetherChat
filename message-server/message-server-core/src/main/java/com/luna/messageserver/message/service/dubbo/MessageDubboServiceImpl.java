@@ -2,6 +2,7 @@ package com.luna.messageserver.message.service.dubbo;
 
 import com.luna.conversationserver.api.service.ConversationDubboService;
 import com.luna.messageserver.api.dto.MessageDTO;
+import com.luna.messageserver.api.enums.MessageStatusEnum;
 import com.luna.messageserver.api.service.MessageDubboService;
 import com.luna.messageserver.message.dao.MessageDao;
 import com.luna.messageserver.message.domain.entity.Message;
@@ -12,6 +13,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +98,27 @@ public class MessageDubboServiceImpl implements MessageDubboService {
         }
 
         return convertToDTO(message);
+    }
+
+    @Override
+    public boolean updateMessageStatus(Long messageId, Integer status) {
+        if (messageId == null || status == null) {
+            log.error("更新消息状态失败: messageId或status为空");
+            return false;
+        }
+
+        Message message = Message.builder()
+                .messageId(messageId)
+                .status(status) // 使用传入的status参数
+                .updateTime(LocalDateTime.now())
+                .build();
+        boolean result = messageDao.updateById(message);
+        if (result) {
+            log.info("Dubbo更新消息状态成功: messageId={}, status={}", messageId, status);
+        } else {
+            log.error("Dubbo更新消息状态失败: messageId={}, status={}", messageId, status);
+        }
+        return result;
     }
 
     /**

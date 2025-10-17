@@ -9,7 +9,8 @@ public enum CommandType {
     GROUP_MESSAGE(1001),
     SINGLE_MESSAGE(1002),
     MESSAGE_ACK(1003),
-    READ_MESSAGE(1004);
+    READ_MESSAGE(1004),
+    REVOKE_MESSAGE(1005);
 
     private final Integer type;
 }
