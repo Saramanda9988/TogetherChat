@@ -1,6 +1,5 @@
 package com.luna.common.config;
 
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,9 +72,6 @@ public class JacksonConfig {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // 启用序列化集合时记录集合类型，以便能正确反序列化
         objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        
-        // 初始化MybatisPlus的JacksonTypeHandler使用这个ObjectMapper
-        JacksonTypeHandler.setObjectMapper(objectMapper);
         
         return objectMapper;
     }
